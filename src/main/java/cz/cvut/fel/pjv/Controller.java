@@ -5,12 +5,10 @@ import javafx.application.Application;
 
 public class Controller {
     public Controller() {
-        start();
+        GUIStart();
     }
-    public void start(){
+    private void GUIStart(){
         Application.launch(View.class);
     }
-    public static void startGameButton(){
-
-    }
+    public static void startGameButtonPressed(){}
 }

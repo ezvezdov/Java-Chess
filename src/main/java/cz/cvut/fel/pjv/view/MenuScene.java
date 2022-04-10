@@ -16,7 +16,7 @@ public class MenuScene extends Scene{
         MenuBorderPane mp = new MenuBorderPane();
     }
 
-    public static class MenuBorderPane extends BorderPane{
+    private static class MenuBorderPane extends BorderPane{
         public MenuBorderPane() {
             //getChildren().add(new Label("Hello World"));
 
