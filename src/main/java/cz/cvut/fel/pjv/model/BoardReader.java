@@ -12,6 +12,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 
@@ -28,6 +29,9 @@ public class BoardReader {
             e.printStackTrace();
         }
         scanner = new Scanner(file);
+
+//        InputStream is = Objects.requireNonNull(getClass().getResourceAsStream("boardData/startBoard.txt"));
+
     }
     /*
     Returns data about square at format [COLOR,PieceType,coordinateA-Z,coordinate1-8]
@@ -77,9 +81,6 @@ public class BoardReader {
         }
         else if(pieceRowData.charAt(0) == 'b'){
             list.add(Color.BLACK);
-        }
-        else if(pieceRowData.charAt(0) == 'E'){
-            list.add(PieceType.EMPTY);
         }
         else {
             return null;
@@ -135,6 +136,10 @@ public class BoardReader {
 
         ClassLoader classLoader = getClass().getClassLoader();
         URL resource = classLoader.getResource(fileName);
+        URL u = this.getClass().getResource("boardData/startBoard.txt");
+        if(u == null){
+            System.out.println("U == null!\n");
+        }
         if (resource == null) {
             throw new IllegalArgumentException("Error: " + fileName +"not found! ");
         } else {

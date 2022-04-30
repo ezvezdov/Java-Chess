@@ -5,17 +5,26 @@ import cz.cvut.fel.pjv.view.View;
 import javafx.application.Application;
 
 public class Controller {
-    public Controller() {
+    View view = null;
+    public Controller()
+    {
+        view = new View();
+        view.setController(this);
         GUIStart();
     }
     private void GUIStart(){
-        Application.launch(View.class);
+        View.launch(view.getClass());
     }
-    public static void startGameButtonPressed(){
+    public void startGameButtonPressed(){
         System.out.println("Start Button pressed!");
+        view.setBoardWindow();
         Model.startGame();
+
     }
-    public static void exitButtonpressed(){
+    public void exitButtonPressed(){
         System.out.println("Exit Button pressed!");
+    }
+    public void boardSquareWasClicked(int indexX, int indexY){
+        System.out.println(indexX + " " + indexY);
     }
 }

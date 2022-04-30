@@ -9,18 +9,20 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 public class MenuPane extends BorderPane{
-    public MenuPane(int sizeX, int sizeY) {
+    View view = null;
+    public MenuPane(View view,int sizeX, int sizeY) {
+        this.view = view;
 
         Button[] buttons = new Button[2];
 
         var startButton = new Button("Start");
         startButton.setOnAction(e -> {
-            View.startButtonPressed();
+            this.view.startButtonPressed();
         });
 
         var exitButton = new Button("Exit");
         exitButton.setOnAction(e -> {
-            View.exitButtonPressed();
+            this.view.exitButtonPressed();
         });
 
         this.setHeight(sizeY);

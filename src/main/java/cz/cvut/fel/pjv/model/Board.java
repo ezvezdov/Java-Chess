@@ -24,5 +24,7 @@ public class Board {
             ArrayList currentPiece = (ArrayList) piece_data.get(i);
             board[(int) currentPiece.get(2)][(int) currentPiece.get(3)] = new Square((Color)currentPiece.get(0),(PieceType)currentPiece.get(1));
         }
+        Color nextMove = (Color) piece_data.get(BOARD_SIZE * BOARD_SIZE);
+        System.out.println(nextMove);
     }
 }
