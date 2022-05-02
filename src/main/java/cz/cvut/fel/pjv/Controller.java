@@ -12,11 +12,10 @@ public class Controller {
     public Controller()
     {
         view = new View();
-        model = new Model();
+        model = new Model(this);
         view.setController(this);
 
         GUIStart();
-//        model = new Model();
 
 
     }
@@ -34,9 +33,17 @@ public class Controller {
     public void exitButtonPressed(){
         System.out.println("Exit Button pressed!");
     }
+
     public void boardSquareWasClicked(int indexX, int indexY){
         System.out.println(indexX + " " + indexY);
+        model.squareWasClicked(indexX, indexY);
     }
+
+    public void updateBoard(ArrayList list){
+        view.changeBoardView(list);
+    }
+
+
     public ArrayList getBoardAsArrayList(){
         return model.getBoardAsArrayList();
     }

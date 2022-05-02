@@ -2,11 +2,10 @@ package cz.cvut.fel.pjv.model;
 
 import cz.cvut.fel.pjv.model.pieces.Piece;
 import cz.cvut.fel.pjv.model.pieces.PieceType;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -15,26 +14,35 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
 
-
 public class BoardReader {
     String filePath;
     Scanner scanner;
 
-    public BoardReader() throws IOException {
-        String fileName = "startBoard.txt";
-        File file = null;
+    public BoardReader(String filePath){
+        /*
+            Receive layout file path and ready to give new data from getData()
+        */
+        readBoardLayout(filePath);
+    }
+
+    public void changeBoardLayout(String filePath){
+        /*
+            Receive new layout file path and ready to give new data from getData()
+        */
+        readBoardLayout(filePath);
+    }
+
+    private void readBoardLayout(String filePath){
+        File file = getFileFromResource(filePath);
         try {
-            file = getFileFromResource(fileName);
-        } catch (URISyntaxException e) {
+            scanner = new Scanner(file);
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        scanner = new Scanner(file);
-
-//        InputStream is = Objects.requireNonNull(getClass().getResourceAsStream("boardData/startBoard.txt"));
-
     }
-    /*
-    Returns data about square at format [COLOR,PieceType,coordinateA-Z,coordinate1-8]
+
+    /**
+     @return  Arraylist of ArrayLists data about square at format { {COLOR,PieceType,coordinateA-Z,coordinate1-8} ...}
     */
     public ArrayList getData(){
         Color currentPlayerMove = null;
@@ -132,41 +140,15 @@ public class BoardReader {
 
 
 
-    private File getFileFromResource(String fileName) throws URISyntaxException {
-
-        ClassLoader classLoader = getClass().getClassLoader();
-        URL resource = classLoader.getResource(fileName);
-        URL u = this.getClass().getResource("boardData/startBoard.txt");
-        if(u == null){
-            System.out.println("U == null!\n");
+    private File getFileFromResource(String fileName) throws NullPointerException {
+        try {
+            String str = getClass().getResource(fileName).getFile();
+            File file = new File(str);
+            return file;
+        } catch (NullPointerException e) {
+            System.out.println("Board annotation isn't available!");
+            e.printStackTrace();
         }
-        if (resource == null) {
-            throw new IllegalArgumentException("Error: " + fileName +"not found! ");
-        } else {
-
-            // failed if files have whitespaces or special characters
-            //return new File(resource.getFile());
-
-            return new File(resource.toURI());
-        }
-
-    }
-
-    public BoardReader(String filePath) {
-    }
-
-    private InputStream getFileFromResourceAsStream(String fileName) {
-
-        // The class loader that loaded the class
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream(fileName);
-
-        // the stream holding the file content
-        if (inputStream == null) {
-            throw new IllegalArgumentException("file not found! " + fileName);
-        } else {
-            return inputStream;
-        }
-
+        return null;
     }
 }

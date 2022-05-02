@@ -3,12 +3,16 @@ package cz.cvut.fel.pjv.view;
 import cz.cvut.fel.pjv.model.pieces.PieceType;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.VPos;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -40,7 +44,7 @@ public class BoardPane extends GridPane {
 
         loadImages();
         generateSquares();
-//        setImage(Color.WHITE,PieceType.KNIGHT,4,7);
+        setImage(Color.WHITE,PieceType.KNIGHT,4,7);
 //        setImage(Color.WHITE,PieceType.KING,0,0);
 //        setImage(Color.BLACK,PieceType.KNIGHT,1,0);
 //        setImage(Color.BLACK,PieceType.KING,1,1);
@@ -72,24 +76,52 @@ public class BoardPane extends GridPane {
     }
 
     private void generateSquares() {
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            for (int j = 0; j < BOARD_SIZE; j++) {
-                piecesArray[i][j] = new Rectangle(SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX);
-                Rectangle r = piecesArray[i][j];
-                boardSquaresArray[i][j] = new Rectangle(SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX);
-                Rectangle backgroundRectangle = boardSquaresArray[i][j];
+        for (int i = 0; i <= BOARD_SIZE+1; i++) {
+            for (int j = 0; j <= BOARD_SIZE+1; j++) {
+                if(i == 0 || j == 0 || i == BOARD_SIZE+1 || j == BOARD_SIZE+1){
+                    char coorOnBoard = 0;
+                    if(j == 0 && i != 0 && i != BOARD_SIZE+1 || j == BOARD_SIZE+1 && i != 0 && i != BOARD_SIZE+1){
+                        coorOnBoard = (char)('A' + (i-1) );
+                    }
 
-                r.setId(String.valueOf(i) + String.valueOf(j));
+                    Rectangle backgroundRectangle = new Rectangle(SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX);
+                    backgroundRectangle.setFill(Color.WHITE);
+                    Text text = new Text(String.valueOf(coorOnBoard));
+                    text.setX(50);
+                    text.setY(50);
+                    text.setTextOrigin(VPos.BASELINE);
+                    text.setFont(Font.font(null, FontWeight.BOLD, 25));
+
+                    this.add(backgroundRectangle, i, j);
+                    this.add(text, i, j);
+                    continue;
+                }
+                int shiftedI = i-1;
+                int shiftedJ = j-1;
+
+                piecesArray[shiftedI][shiftedJ] = new Rectangle(SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX);
+                Rectangle r = piecesArray[shiftedI][shiftedJ];
+                boardSquaresArray[shiftedI][shiftedJ] = new Rectangle(SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX);
+                Rectangle backgroundRectangle = boardSquaresArray[shiftedI][shiftedJ];
+
+                r.setId(String.valueOf(shiftedI) + String.valueOf(shiftedJ));
                 r.setFill(Color.TRANSPARENT);
                 r.setOnMouseClicked(new EventHandler<MouseEvent>()
                 {
                     @Override
                     public void handle(MouseEvent t) {
-                        int x = Integer.parseInt(r.getId()) / 10;
-                        int y = Integer.parseInt(r.getId()) % 10;
+                        int viewI = Integer.parseInt(r.getId()) / 10;
+                        int viewJ = Integer.parseInt(r.getId()) % 10;
 
-                        paintSelected(x,y);
-                        view.boardSquareWasClicked(x,y);
+                        ArrayList boardCoordinates = transformView2Board(viewI,viewJ);
+                        int boardI = (int) boardCoordinates.get(0);
+                        int boardJ = (int) boardCoordinates.get(1);
+
+                        System.out.println("viewI: " + viewI + " " + "Y: " + viewJ);
+                        System.out.println("boardI: " + boardI + " " + "boardJ: " + boardJ);
+
+                        paintSelected(viewI,viewJ);
+                        view.boardSquareWasClicked(boardI,boardJ);
                     }
                 });
                 if ((i+j) % 2 == 0) {
@@ -99,23 +131,23 @@ public class BoardPane extends GridPane {
                     backgroundRectangle.setFill(Color.SADDLEBROWN);
                 }
 
-                this.add(backgroundRectangle, j, i);
-                this.add(r, j, i);
+                this.add(backgroundRectangle, i, j);
+                this.add(r, i, j);
 
             }
         }
     }
 
-    private void paintSelected(int x, int y){
-        if(piecesArray[x][y].getFill() != Color.TRANSPARENT ){
+    private void paintSelected(int viewI, int viewJ){
+        if(piecesArray[viewI][viewJ].getFill() != Color.TRANSPARENT ){
             if(isSelectedSquare){
                 boardSquaresArray[selectedSquareX][selectedSquareY].setFill(selectedSquareColor);
             }
             isSelectedSquare = true;
-            selectedSquareColor = (Color) boardSquaresArray[x][y].getFill();
-            selectedSquareX = x;
-            selectedSquareY = y;
-            boardSquaresArray[x][y].setFill(Color.GOLD);
+            selectedSquareColor = (Color) boardSquaresArray[viewI][viewJ].getFill();
+            selectedSquareX = viewI;
+            selectedSquareY = viewJ;
+            boardSquaresArray[viewI][viewJ].setFill(Color.GOLD);
         }
         else if(isSelectedSquare){
             boardSquaresArray[selectedSquareX][selectedSquareY].setFill(selectedSquareColor);
@@ -123,19 +155,34 @@ public class BoardPane extends GridPane {
         }
     }
 
+    private ArrayList transformBoard2View(int boardI, int boardJ){
+        ArrayList coord = new ArrayList();
+        coord.add(boardI);
+        coord.add((BOARD_SIZE-1) - boardJ);
+        return coord;
+    }
+
+    private ArrayList transformView2Board(int viewI, int viewJ){
+        ArrayList coord = new ArrayList();
+        coord.add(viewI);
+        coord.add((BOARD_SIZE-1) - viewJ);
+        return coord;
+    }
+
     public void changeBoardViewByList(ArrayList changesList){
-        //{ {Color, PieceType, x, y} ... }
+        //{ {Color, PieceType, boardI, boardJ} ... }
         for(int i = 0; i < changesList.size(); i++){
             ArrayList squareToChange = (ArrayList) changesList.get(i);
-            setImage((Color) squareToChange.get(0), (PieceType) squareToChange.get(1), (int) squareToChange.get(2),(int) squareToChange.get(3));
+            ArrayList<Integer> coordinates = transformBoard2View((int)squareToChange.get(2),(int)squareToChange.get(3));
+            setImage((Color) squareToChange.get(0), (PieceType) squareToChange.get(1), coordinates.get(0),coordinates.get(1));
         }
     }
 
-    public void setImage(Color pieceColor, PieceType pieceType, int x, int y){
-        System.out.println(y + " " + x + " " +  pieceColor + " " + pieceType);
-        if(pieceType == PieceType.EMPTY){
+    public void setImage(Color pieceColor, PieceType pieceType, int viewI, int viewJ){
+        System.out.println(viewI + " " + viewJ + " " +  pieceColor + " " + pieceType);
 
-            piecesArray[y][x].setFill(Color.TRANSPARENT);
+        if(pieceType == PieceType.EMPTY){
+            piecesArray[viewI][viewJ].setFill(Color.TRANSPARENT);
             return;
         }
         int colorIndex = (pieceColor == Color.WHITE) ? 0 : 1;
@@ -160,7 +207,7 @@ public class BoardPane extends GridPane {
                 pieceIndex = 5;
                 break;
         }
-        piecesArray[y][x].setFill(new ImagePattern(images[colorIndex][pieceIndex]));
+        piecesArray[viewI][viewJ].setFill(new ImagePattern(images[colorIndex][pieceIndex]));
     }
 
 

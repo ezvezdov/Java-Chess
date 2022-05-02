@@ -38,7 +38,6 @@ public class View extends Application {
         initMenuScene();
         initBoardScene();
         setMenuScene();
-//        stage.initStyle(StageStyle.TRANSPARENT);
         stage.setTitle("JavaFX Chess");
         stage.show();
     }
