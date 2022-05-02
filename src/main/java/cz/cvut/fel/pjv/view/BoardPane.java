@@ -2,25 +2,28 @@ package cz.cvut.fel.pjv.view;
 
 import cz.cvut.fel.pjv.model.pieces.PieceType;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
+import javafx.geometry.Insets;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
-import java.net.URL;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 
 public class BoardPane extends GridPane {
     View view = null;
     private int BOARD_SIZE;
     private int SQUARE_SIZE_PX;
-    Rectangle[][] squaresArray;
+    Rectangle[][] piecesArray;
+    Rectangle[][] boardSquaresArray;
     Image[][] images = null;
+
+    private boolean isSelectedSquare = false;
+    private int selectedSquareX, selectedSquareY;
+    private Color selectedSquareColor;
 
     private int windowSizeX,windowSizeY;
     public BoardPane(View view,int windowSizeX, int windowSizeY, int BOARD_SIZE, int SQUARE_SIZE_PX) {
@@ -31,91 +34,133 @@ public class BoardPane extends GridPane {
         this.BOARD_SIZE = BOARD_SIZE;
         this.SQUARE_SIZE_PX = SQUARE_SIZE_PX;
 
-        this.squaresArray = new Rectangle[BOARD_SIZE][BOARD_SIZE];
+        this.piecesArray = new Rectangle[BOARD_SIZE][BOARD_SIZE];
+        this.boardSquaresArray = new Rectangle[BOARD_SIZE][BOARD_SIZE];
+        this.setBackground(new Background(new BackgroundFill(Color.GRAY,new CornerRadii(0), new Insets(0))));
 
         loadImages();
         generateSquares();
-        setImage(Color.WHITE,PieceType.EMPTY,0,1);
+//        setImage(Color.WHITE,PieceType.KNIGHT,4,7);
+//        setImage(Color.WHITE,PieceType.KING,0,0);
+//        setImage(Color.BLACK,PieceType.KNIGHT,1,0);
+//        setImage(Color.BLACK,PieceType.KING,1,1);
+
     }
 
     private void loadImages(){
         images = new Image[2][6];
-        String path = getClass().getResource("/piecesImages/White/bishop.png").getFile();
-        System.out.println(path);
 
         try {
-            images[0][0] = new Image(path.toString());
-//            images[0][1] = new Image("/piecesImages/White/bishop.png");
-//            images[0][2] = new Image("/piecesImages/White/bishop.png");
-//            images[0][3] = new Image("/piecesImages/White/bishop.png");
-//            images[0][4] = new Image("/piecesImages/White/bishop.png");
-//            images[0][5] = new Image("/piecesImages/White/bishop.png");
-//            images[1][0] = new Image("/piecesImages/Black/bishop.png");
-//            images[1][1] = new Image("/piecesImages/Black/bishop.png");
-//            images[1][2] = new Image("/piecesImages/Black/bishop.png");
-//            images[1][3] = new Image("/piecesImages/Black/bishop.png");
-//            images[1][4] = new Image("/piecesImages/Black/bishop.png");
+            images[0][0] = new Image(new FileInputStream(getClass().getResource("/piecesImages/White/bishop.png").getFile()));
+            images[0][1] = new Image(new FileInputStream(getClass().getResource("/piecesImages/White/king.png").getFile()));
+            images[0][2] = new Image(new FileInputStream(getClass().getResource("/piecesImages/White/knight.png").getFile()));
+            images[0][3] = new Image(new FileInputStream(getClass().getResource("/piecesImages/White/pawn.png").getFile()));
+            images[0][4] = new Image(new FileInputStream(getClass().getResource("/piecesImages/White/queen.png").getFile()));
+            images[0][5] = new Image(new FileInputStream(getClass().getResource("/piecesImages/White/rook.png").getFile()));
+
+            images[1][0] = new Image(new FileInputStream(getClass().getResource("/piecesImages/Black/bishop.png").getFile()));
+            images[1][1] = new Image(new FileInputStream(getClass().getResource("/piecesImages/Black/king.png").getFile()));
+            images[1][2] = new Image(new FileInputStream(getClass().getResource("/piecesImages/Black/knight.png").getFile()));
+            images[1][3] = new Image(new FileInputStream(getClass().getResource("/piecesImages/Black/pawn.png").getFile()));
+            images[1][4] = new Image(new FileInputStream(getClass().getResource("/piecesImages/Black/queen.png").getFile()));
+            images[1][5] = new Image(new FileInputStream(getClass().getResource("/piecesImages/Black/rook.png").getFile()));
         } catch (Exception e) {
+            System.out.println("Pieces Images not found!\n");
             e.printStackTrace();
-//            System.out.println("NOT FOUND");
+
         }
-
-
-
     }
 
     private void generateSquares() {
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
-                squaresArray[i][j] = new Rectangle(SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX);
-                Rectangle r = squaresArray[i][j];
+                piecesArray[i][j] = new Rectangle(SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX);
+                Rectangle r = piecesArray[i][j];
+                boardSquaresArray[i][j] = new Rectangle(SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX);
+                Rectangle backgroundRectangle = boardSquaresArray[i][j];
+
                 r.setId(String.valueOf(i) + String.valueOf(j));
+                r.setFill(Color.TRANSPARENT);
                 r.setOnMouseClicked(new EventHandler<MouseEvent>()
                 {
                     @Override
                     public void handle(MouseEvent t) {
-                        r.setFill(Color.RED);
                         int x = Integer.parseInt(r.getId()) / 10;
                         int y = Integer.parseInt(r.getId()) % 10;
+
+                        paintSelected(x,y);
                         view.boardSquareWasClicked(x,y);
                     }
                 });
-                if ((i+j) % 2 == 0)
-                    r.setFill(Color.WHITE);
+                if ((i+j) % 2 == 0) {
+                    backgroundRectangle.setFill(Color.BEIGE);
+                }
+                else{
+                    backgroundRectangle.setFill(Color.SADDLEBROWN);
+                }
+
+                this.add(backgroundRectangle, j, i);
                 this.add(r, j, i);
+
             }
         }
     }
-    public void changeFiguresPositions(ArrayList changesList){
-        //{Color, PieceType, x, y}
-        for(int i = 0; i < changesList.size(); i++){
-            ArrayList squareToChange = (ArrayList) changesList.get(i);
 
+    private void paintSelected(int x, int y){
+        if(piecesArray[x][y].getFill() != Color.TRANSPARENT ){
+            if(isSelectedSquare){
+                boardSquaresArray[selectedSquareX][selectedSquareY].setFill(selectedSquareColor);
+            }
+            isSelectedSquare = true;
+            selectedSquareColor = (Color) boardSquaresArray[x][y].getFill();
+            selectedSquareX = x;
+            selectedSquareY = y;
+            boardSquaresArray[x][y].setFill(Color.GOLD);
+        }
+        else if(isSelectedSquare){
+            boardSquaresArray[selectedSquareX][selectedSquareY].setFill(selectedSquareColor);
+            isSelectedSquare = false;
         }
     }
-//    private void changeSquare(Color color, PieceType pieceType, int x, int y){
-//
-//    }
 
-    private void setImage(Color pieceColor, PieceType pieceType, int x, int y){
+    public void changeBoardViewByList(ArrayList changesList){
+        //{ {Color, PieceType, x, y} ... }
+        for(int i = 0; i < changesList.size(); i++){
+            ArrayList squareToChange = (ArrayList) changesList.get(i);
+            setImage((Color) squareToChange.get(0), (PieceType) squareToChange.get(1), (int) squareToChange.get(2),(int) squareToChange.get(3));
+        }
+    }
 
+    public void setImage(Color pieceColor, PieceType pieceType, int x, int y){
+        System.out.println(y + " " + x + " " +  pieceColor + " " + pieceType);
+        if(pieceType == PieceType.EMPTY){
 
-
-//        URL url = getClass().getResource("/drawIcon.png");
-//        Image image = new Image("bishop.png");
-//        squaresArray[x][y].setFill(new ImagePattern(images[0][1]));
-
-
-
-
-
-//        Image img = new Image(getClass().getResource("resources/piecesImages/Black/bishop.png"));
-//        BufferedImage image = ImageIO.read(getClass().getResource("/resources/icon.gif"));
-
-
-
-
-
+            piecesArray[y][x].setFill(Color.TRANSPARENT);
+            return;
+        }
+        int colorIndex = (pieceColor == Color.WHITE) ? 0 : 1;
+        int pieceIndex = -1;
+        switch (pieceType){
+            case BISHOP:
+                pieceIndex = 0;
+                break;
+            case KING:
+                pieceIndex = 1;
+                break;
+            case KNIGHT:
+                pieceIndex = 2;
+                break;
+            case PAWN:
+                pieceIndex = 3;
+                break;
+            case QUEEN:
+                pieceIndex = 4;
+                break;
+            case ROOK:
+                pieceIndex = 5;
+                break;
+        }
+        piecesArray[y][x].setFill(new ImagePattern(images[colorIndex][pieceIndex]));
     }
 
 

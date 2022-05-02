@@ -2,10 +2,15 @@ package cz.cvut.fel.pjv.view;
 
 import cz.cvut.fel.pjv.Controller;
 import cz.cvut.fel.pjv.model.Board;
+import cz.cvut.fel.pjv.model.pieces.PieceType;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
+import java.util.ArrayList;
 
 public class View extends Application {
     private int windowSizeX = 500;
@@ -18,6 +23,8 @@ public class View extends Application {
     private static Scene menuScene = null;
     private static Scene boardScene = null;
     private static Controller ctrl = null;
+    private static BoardPane boardPane = null;
+    private static MenuPane menuPane = null;
 
 
     public void setController(Controller ctrl){
@@ -31,6 +38,7 @@ public class View extends Application {
         initMenuScene();
         initBoardScene();
         setMenuScene();
+//        stage.initStyle(StageStyle.TRANSPARENT);
         stage.setTitle("JavaFX Chess");
         stage.show();
     }
@@ -40,9 +48,8 @@ public class View extends Application {
 
     }
     private void initBoardScene(){
-        BoardPane boardPane = new BoardPane(this,windowSizeX,windowSizeY,BOARD_SIZE,SQUARE_SIZE_PX);
+        boardPane = new BoardPane(this,windowSizeX,windowSizeY,BOARD_SIZE,SQUARE_SIZE_PX);
         boardScene = new Scene(boardPane,windowSizeX,windowSizeY);
-
     }
     private void setMenuScene(){
         stage.setScene(menuScene);
@@ -62,6 +69,10 @@ public class View extends Application {
 
     public void setBoardWindow(){
         setBoardScene();
+    }
+
+    public void changeBoardView(ArrayList list){
+        boardPane.changeBoardViewByList(list);
     }
 
 

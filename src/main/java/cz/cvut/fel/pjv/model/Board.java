@@ -27,4 +27,18 @@ public class Board {
         Color nextMove = (Color) piece_data.get(BOARD_SIZE * BOARD_SIZE);
         System.out.println(nextMove);
     }
+    public ArrayList getBoardAsArrayList(){
+        ArrayList boardArrayList = new ArrayList();
+        for(int i = 0; i < BOARD_SIZE; i++){
+            for(int j = 0; j < BOARD_SIZE; j++){
+                ArrayList currentSquare = new ArrayList();
+                currentSquare.add(board[i][j].pieceColor);
+                currentSquare.add(board[i][j].pieceType);
+                currentSquare.add(i);
+                currentSquare.add(j);
+                boardArrayList.add(currentSquare);
+            }
+        }
+        return boardArrayList;
+    }
 }

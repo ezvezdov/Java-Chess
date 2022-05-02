@@ -1,5 +1,7 @@
 package cz.cvut.fel.pjv.model;
 
+import java.util.ArrayList;
+
 public class Model {
     boolean isGame = true;
 
@@ -15,4 +17,8 @@ public class Model {
     public void squareWasClicked(){
 
     }
+    public ArrayList getBoardAsArrayList(){
+        return board.getBoardAsArrayList();
+    }
+
 }
