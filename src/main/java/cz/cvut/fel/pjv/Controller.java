@@ -42,6 +42,9 @@ public class Controller {
     public void updateBoard(ArrayList list){
         view.changeBoardView(list);
     }
+    public void selectPiece(int boardI, int boardJ ){
+        view.selectPiece(boardI,boardJ);
+    }
 
 
     public ArrayList getBoardAsArrayList(){

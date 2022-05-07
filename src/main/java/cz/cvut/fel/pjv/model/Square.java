@@ -4,25 +4,29 @@ import cz.cvut.fel.pjv.model.pieces.*;
 import javafx.scene.paint.Color;
 
 public class Square {
-    private int indexI;
-    private int indexJ;
+    private int boardI;
+    private int boardJ;
     protected Piece piece = null;
     protected PieceType pieceType;
     protected Color pieceColor;
 
     public Square() {}
 
-    public Square(Color pieceColor,PieceType pieceType, int indexI, int indexJ) {
+    public Square(Color pieceColor, PieceType pieceType, int boardI, int boardJ) {
         this.pieceColor = pieceColor;
         this.pieceType = pieceType;
-        this.indexI = indexI;
-        this.indexJ = indexJ;
+        this.boardI = boardI;
+        this.boardJ = boardJ;
 
         initPiece();
     }
 
+
     public PieceType getPieceType() {
         return pieceType;
+    }
+    public Color getPieceColor() {
+        return pieceColor;
     }
 
     public boolean isEmpty(){
@@ -43,22 +47,22 @@ public class Square {
     private void initPiece(){
         switch (pieceType){
             case BISHOP:
-                piece = new BishopPiece(pieceColor);
+                piece = new BishopPiece(pieceColor,boardI,boardJ);
                 break;
             case KING:
-                piece = new KingPiece(pieceColor);
+                piece = new KingPiece(pieceColor,boardI,boardJ);
                 break;
             case KNIGHT:
-                piece = new KnightPiece(pieceColor);
+                piece = new KnightPiece(pieceColor,boardI,boardJ);
                 break;
             case PAWN:
-                piece = new PawnPiece(pieceColor);
+                piece = new PawnPiece(pieceColor,boardI,boardJ);
                 break;
             case QUEEN:
-                piece = new QueenPiece(pieceColor);
+                piece = new QueenPiece(pieceColor,boardI,boardJ);
                 break;
             case ROOK:
-                piece = new RookPiece(pieceColor);
+                piece = new RookPiece(pieceColor,boardI,boardJ);
                 break;
         }
 

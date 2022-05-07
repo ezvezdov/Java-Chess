@@ -25,9 +25,11 @@ public class BoardPane extends GridPane {
     Rectangle[][] boardSquaresArray;
     Image[][] images = null;
 
-    private boolean isSelectedSquare = false;
-    private int selectedSquareX, selectedSquareY;
-    private Color selectedSquareColor;
+
+    private Color selectedSquareColor = Color.GOLD;
+    private Color evenSquareColor = Color.BEIGE;
+    private Color oddSquareColor = Color.SADDLEBROWN;
+    private Color transparentColor = Color.TRANSPARENT;
 
     private int windowSizeX,windowSizeY;
     public BoardPane(View view,int windowSizeX, int windowSizeY, int BOARD_SIZE, int SQUARE_SIZE_PX) {
@@ -44,7 +46,7 @@ public class BoardPane extends GridPane {
 
         loadImages();
         generateSquares();
-        setImage(Color.WHITE,PieceType.KNIGHT,4,7);
+//        setImage(Color.WHITE,PieceType.KNIGHT,4,7);
 //        setImage(Color.WHITE,PieceType.KING,0,0);
 //        setImage(Color.BLACK,PieceType.KNIGHT,1,0);
 //        setImage(Color.BLACK,PieceType.KING,1,1);
@@ -105,7 +107,7 @@ public class BoardPane extends GridPane {
                 Rectangle backgroundRectangle = boardSquaresArray[shiftedI][shiftedJ];
 
                 r.setId(String.valueOf(shiftedI) + String.valueOf(shiftedJ));
-                r.setFill(Color.TRANSPARENT);
+                r.setFill(transparentColor);
                 r.setOnMouseClicked(new EventHandler<MouseEvent>()
                 {
                     @Override
@@ -120,15 +122,15 @@ public class BoardPane extends GridPane {
                         System.out.println("viewI: " + viewI + " " + "Y: " + viewJ);
                         System.out.println("boardI: " + boardI + " " + "boardJ: " + boardJ);
 
-                        paintSelected(viewI,viewJ);
+//                        paintSelected(viewI,viewJ);
                         view.boardSquareWasClicked(boardI,boardJ);
                     }
                 });
                 if ((i+j) % 2 == 0) {
-                    backgroundRectangle.setFill(Color.BEIGE);
+                    backgroundRectangle.setFill(evenSquareColor);
                 }
                 else{
-                    backgroundRectangle.setFill(Color.SADDLEBROWN);
+                    backgroundRectangle.setFill(oddSquareColor);
                 }
 
                 this.add(backgroundRectangle, i, j);
@@ -138,20 +140,17 @@ public class BoardPane extends GridPane {
         }
     }
 
-    private void paintSelected(int viewI, int viewJ){
-        if(piecesArray[viewI][viewJ].getFill() != Color.TRANSPARENT ){
-            if(isSelectedSquare){
-                boardSquaresArray[selectedSquareX][selectedSquareY].setFill(selectedSquareColor);
-            }
-            isSelectedSquare = true;
-            selectedSquareColor = (Color) boardSquaresArray[viewI][viewJ].getFill();
-            selectedSquareX = viewI;
-            selectedSquareY = viewJ;
-            boardSquaresArray[viewI][viewJ].setFill(Color.GOLD);
+    public void paintSelected(int boardI, int boardJ){
+        ArrayList viewCoordinates = transformBoard2View(boardI,boardJ);
+        int viewI = (int) viewCoordinates.get(0);
+        int viewJ = (int) viewCoordinates.get(1);
+
+        if(boardSquaresArray[viewI][viewJ].getFill() == selectedSquareColor){
+            Color originalSquareColor = ((viewI + viewJ) % 2 == 0) ? evenSquareColor : oddSquareColor;
+            boardSquaresArray[viewI][viewJ].setFill(originalSquareColor);
         }
-        else if(isSelectedSquare){
-            boardSquaresArray[selectedSquareX][selectedSquareY].setFill(selectedSquareColor);
-            isSelectedSquare = false;
+        else if(piecesArray[viewI][viewJ].getFill() != transparentColor ){
+            boardSquaresArray[viewI][viewJ].setFill(selectedSquareColor);
         }
     }
 
@@ -182,7 +181,7 @@ public class BoardPane extends GridPane {
         System.out.println(viewI + " " + viewJ + " " +  pieceColor + " " + pieceType);
 
         if(pieceType == PieceType.EMPTY){
-            piecesArray[viewI][viewJ].setFill(Color.TRANSPARENT);
+            piecesArray[viewI][viewJ].setFill(transparentColor);
             return;
         }
         int colorIndex = (pieceColor == Color.WHITE) ? 0 : 1;

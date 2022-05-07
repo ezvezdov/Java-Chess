@@ -36,36 +36,53 @@ public class Model {
     public void squareWasClicked(int boardI, int boardJ){
 
         System.out.println(isCurrentPlayersPiece(boardI,boardJ));
-        if(!isSelectedPiece && isEmptySquare(boardI,boardJ)){
-            System.out.println("Seleceted piece is clear!");
-            isSelectedPiece = false;
-            selectedPieceI = -1;
-            selectedPieceJ = -1;
-        }
-        else if(isSelectedPiece && isEmptySquare(boardI,boardJ) || isSelectedPiece && !isCurrentPlayersPiece(boardI,boardJ)){
+//        if(!isSelectedPiece && isEmptySquare(boardI,boardJ)){
+//            unselectPiece();
+//        }
+        // make move
+        if(isSelectedPiece && isEmptySquare(boardI,boardJ) || isSelectedPiece && !isCurrentPlayersPiece(boardI,boardJ)){
             System.out.println("Move has done!");
             ArrayList changesList;
             changesList = board.makeMove(selectedPieceI,selectedPieceJ,boardI,boardJ);
+            if(changesList.size() != 0){
+                currentPlayerColor = currentPlayerColor == Color.BLACK ? Color.WHITE : Color.BLACK;
+            }
+
+            unselectPiece();
+
+
             ctrl.updateBoard(changesList);
-//            ctrl.getBoardAsArrayList();
-//            System.out.println(board);
-            System.out.println("Seleceted piece is clear!");
-            isSelectedPiece = false;
-            selectedPieceI = -1;
-            selectedPieceJ = -1;
+
 
         }
-        else if(!isSelectedPiece && !isEmptySquare(boardI,boardJ)){
-            //TODO make view select
-            System.out.println("Piece have selected!");
-            isSelectedPiece = true;
-            selectedPieceI = boardI;
-            selectedPieceJ = boardJ;
+        //select piece
+        else if(!isSelectedPiece && !isEmptySquare(boardI,boardJ) && isCurrentPlayersPiece(boardI,boardJ)){
+            selectPiece(boardI, boardJ);
+        }
+        //reselect piece
+        else if(isSelectedPiece && !isEmptySquare(boardI,boardJ) && isCurrentPlayersPiece(boardI, boardJ)){
+            unselectPiece();
+            selectPiece(boardI, boardJ);
         }
         board.printBoard();
 
     }
 
+    private void selectPiece(int boardI, int boardJ){
+        System.out.println("Piece have selected!");
+        isSelectedPiece = true;
+        selectedPieceI = boardI;
+        selectedPieceJ = boardJ;
+        ctrl.selectPiece(boardI,boardJ);
+    }
+
+    private void unselectPiece(){
+        System.out.println("Seleceted piece is clear!");
+        ctrl.selectPiece(selectedPieceI,selectedPieceJ);
+        isSelectedPiece = false;
+        selectedPieceI = -1;
+        selectedPieceJ = -1;
+    }
 
     private boolean isCurrentPlayersPiece(int boardI, int indexJ){
         ArrayList list = board.getSquareStatus(boardI,indexJ);
@@ -78,7 +95,7 @@ public class Model {
     }
 
     private boolean isEmptySquare(int boardI, int boardJ){
-        ArrayList list = (ArrayList) board.getSquareStatus(boardI,boardJ);
+        ArrayList list = board.getSquareStatus(boardI,boardJ);
         PieceType pieceType = (PieceType) list.get(1);
         if(pieceType == PieceType.EMPTY){
             return true;

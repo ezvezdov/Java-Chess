@@ -62,8 +62,8 @@ public class View extends Application {
     protected void startButtonPressed(){
         ctrl.startGameButtonPressed();
     }
-    protected void boardSquareWasClicked(int indexX, int indexY ){
-        ctrl.boardSquareWasClicked(indexX,indexY);
+    protected void boardSquareWasClicked(int boardI, int boardJ ){
+        ctrl.boardSquareWasClicked(boardI,boardJ);
     }
 
     public void setBoardWindow(){
@@ -72,6 +72,9 @@ public class View extends Application {
 
     public void changeBoardView(ArrayList list){
         boardPane.changeBoardViewByList(list);
+    }
+    public void selectPiece(int boardI, int boardJ){
+        boardPane.paintSelected(boardI,boardJ);
     }
 
 
