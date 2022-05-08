@@ -38,6 +38,15 @@ public class Controller {
         System.out.println(indexX + " " + indexY);
         model.squareWasClicked(indexX, indexY);
     }
+    public void saveGameButtonWasPressed(){model.saveGame();}
+    public void continueGameButtonWasPressed(){
+        model.continueGame();
+        view.changeBoardView(getBoardAsArrayList());
+    }
+    public void newGameButtonWasPressed(){
+        model.startGame();
+        view.changeBoardView(getBoardAsArrayList());
+    }
 
     public void updateBoard(ArrayList list){
         view.changeBoardView(list);

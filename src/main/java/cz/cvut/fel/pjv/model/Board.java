@@ -1,16 +1,17 @@
 package cz.cvut.fel.pjv.model;
 
 import cz.cvut.fel.pjv.model.pieces.PieceType;
+import cz.cvut.fel.pjv.model.utils.BoardReader;
+import cz.cvut.fel.pjv.model.utils.BoardWriter;
 import javafx.scene.paint.Color;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Board {
     private final int BOARD_SIZE = 8;
     Square[][] board;
-    BoardReader br;
+    BoardReader br = null;
+    BoardWriter bw = null;
 
     private String START_BOARD_FILE = "/boardData/startBoard.txt";
     private String SAVED_BOARD_FILE = "/boardData/savedBoard.txt";
@@ -21,13 +22,7 @@ public class Board {
         board = new Square[BOARD_SIZE][BOARD_SIZE];
         br = new BoardReader(START_BOARD_FILE);
 
-        ArrayList piece_data = br.getData();
-        System.out.println(piece_data.toString());
-        for(int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++){
-            ArrayList currentPiece = (ArrayList) piece_data.get(i);
-            board[(int) currentPiece.get(2)][(int) currentPiece.get(3)] = new Square((Color)currentPiece.get(0),(PieceType)currentPiece.get(1),(int) currentPiece.get(2),(int) currentPiece.get(3));
-        }
-        nextMove = (Color) piece_data.get(BOARD_SIZE * BOARD_SIZE);
+        loadBoard();
     }
 
     public Color getNextMove(){
@@ -59,6 +54,32 @@ public class Board {
         return boardArrayList;
     }
 
+    public void loadBoard(){
+        ArrayList boardData = br.getData();
+        System.out.println(boardData.toString());
+        System.out.println("BoardSize " + boardData.size());
+        for(int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++){
+            ArrayList currentPiece = (ArrayList) boardData.get(i);
+            board[(int) currentPiece.get(2)][(int) currentPiece.get(3)] = new Square((Color)currentPiece.get(0),(PieceType)currentPiece.get(1),(int) currentPiece.get(2),(int) currentPiece.get(3));
+        }
+        nextMove = (Color) boardData.get(BOARD_SIZE * BOARD_SIZE);
+    }
+
+    public void loadSavedGame(){
+        br.changeBoardLayout(SAVED_BOARD_FILE);
+        loadBoard();
+    }
+
+    public void saveGame(){
+        if(bw == null){
+            bw = new BoardWriter(SAVED_BOARD_FILE);
+        }
+        ArrayList list = getBoardAsArrayList();
+        System.out.println("BoardSize2 " + list.size());
+        bw.setData(list,nextMove);
+        System.out.println("Game was saved!");
+    }
+
     public ArrayList makeMove(int fromI, int fromJ, int toI, int toJ){
         /**
          * Makes move if it's available
@@ -87,6 +108,15 @@ public class Board {
         return globalList;
 
     }
+
+
+
+
+
+
+
+
+
 
     public void printBoard() {
         for(int i = 0; i < BOARD_SIZE; i++){

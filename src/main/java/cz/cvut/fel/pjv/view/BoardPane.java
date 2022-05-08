@@ -1,9 +1,13 @@
 package cz.cvut.fel.pjv.view;
 
 import cz.cvut.fel.pjv.model.pieces.PieceType;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -45,11 +49,51 @@ public class BoardPane extends GridPane {
         this.setBackground(new Background(new BackgroundFill(Color.GRAY,new CornerRadii(0), new Insets(0))));
 
         loadImages();
+
+
+        Menu m = new Menu("Game");
+        Menu n = new Menu("Menu");
+        Menu o = new Menu("Menu");
+
+        // create menuitems
+        MenuItem continueGameMenuItem = new MenuItem("Continue game");
+        continueGameMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                view.continueGameButtonWasPressed();
+            }
+        });
+        MenuItem newGameMenuItem = new MenuItem("New game");
+        newGameMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                view.newGameButtonWasPressed();
+            }
+        });
+        MenuItem saveGameMenuItem = new MenuItem("Save game");
+        saveGameMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                view.saveGameButtonWasPressed();
+            }
+        });
+
+
+        // add menu items to menu
+        m.getItems().add(continueGameMenuItem);
+        m.getItems().add(newGameMenuItem);
+        m.getItems().add(saveGameMenuItem);
+
+        // create a menubar
+        MenuBar mb = new MenuBar();
+//        mb.setLayoutX(50);
+        System.out.println("MenuBar height " + mb.getLayoutX());
+
+        // add menu to menubar
+        mb.getMenus().add(m);
+        mb.getMenus().add(n);
+        mb.getMenus().add(o);
+        this.add(mb,0,0,10,1);
+
+
         generateSquares();
-//        setImage(Color.WHITE,PieceType.KNIGHT,4,7);
-//        setImage(Color.WHITE,PieceType.KING,0,0);
-//        setImage(Color.BLACK,PieceType.KNIGHT,1,0);
-//        setImage(Color.BLACK,PieceType.KING,1,1);
 
     }
 
@@ -94,8 +138,8 @@ public class BoardPane extends GridPane {
                     text.setTextOrigin(VPos.BASELINE);
                     text.setFont(Font.font(null, FontWeight.BOLD, 25));
 
-                    this.add(backgroundRectangle, i, j);
-                    this.add(text, i, j);
+                    this.add(backgroundRectangle, i, j+1);
+                    this.add(text, i, j+1);
                     continue;
                 }
                 int shiftedI = i-1;
@@ -122,7 +166,6 @@ public class BoardPane extends GridPane {
                         System.out.println("viewI: " + viewI + " " + "Y: " + viewJ);
                         System.out.println("boardI: " + boardI + " " + "boardJ: " + boardJ);
 
-//                        paintSelected(viewI,viewJ);
                         view.boardSquareWasClicked(boardI,boardJ);
                     }
                 });
@@ -133,8 +176,8 @@ public class BoardPane extends GridPane {
                     backgroundRectangle.setFill(oddSquareColor);
                 }
 
-                this.add(backgroundRectangle, i, j);
-                this.add(r, i, j);
+                this.add(backgroundRectangle, i, j+1);
+                this.add(r, i, j+1);
 
             }
         }

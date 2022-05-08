@@ -1,38 +1,31 @@
-package cz.cvut.fel.pjv.model;
+package cz.cvut.fel.pjv.model.utils;
 
-import cz.cvut.fel.pjv.model.pieces.Piece;
 import cz.cvut.fel.pjv.model.pieces.PieceType;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class BoardReader {
-    String filePath;
+//    String filePath;
     Scanner scanner;
 
     public BoardReader(String filePath){
         /*
             Receive layout file path and ready to give new data from getData()
         */
-        readBoardLayout(filePath);
+        setScanner(filePath);
     }
 
     public void changeBoardLayout(String filePath){
         /*
             Receive new layout file path and ready to give new data from getData()
         */
-        readBoardLayout(filePath);
+        setScanner(filePath);
     }
 
-    private void readBoardLayout(String filePath){
+    private void setScanner(String filePath){
         File file = getFileFromResource(filePath);
         try {
             scanner = new Scanner(file);

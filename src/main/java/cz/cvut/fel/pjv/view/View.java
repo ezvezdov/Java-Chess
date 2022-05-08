@@ -13,11 +13,13 @@ import javafx.stage.StageStyle;
 import java.util.ArrayList;
 
 public class View extends Application {
-    private int windowSizeX = 500;
-    private int windowSizeY = 500;
-
     private final int BOARD_SIZE = 8;
     private final int SQUARE_SIZE_PX = 50;
+
+    // + 2 means add 2 squares of SQUARE_SIZE_PX for board coordinates
+    private int windowSizeX = SQUARE_SIZE_PX * (BOARD_SIZE + 2);
+    // + 2 means add 2 squares of SQUARE_SIZE_PX for board coordinates
+    private int windowSizeY = SQUARE_SIZE_PX * (BOARD_SIZE + 2) + 30;
 
     private static Stage stage = null;
     private static Scene menuScene = null;
@@ -56,6 +58,7 @@ public class View extends Application {
     private void setBoardScene(){
         stage.setScene(boardScene);
     }
+
     protected void exitButtonPressed(){
         ctrl.exitButtonPressed();
     }
@@ -65,6 +68,9 @@ public class View extends Application {
     protected void boardSquareWasClicked(int boardI, int boardJ ){
         ctrl.boardSquareWasClicked(boardI,boardJ);
     }
+    protected void saveGameButtonWasPressed(){ctrl.saveGameButtonWasPressed();}
+    protected void continueGameButtonWasPressed(){ctrl.continueGameButtonWasPressed();}
+    protected void newGameButtonWasPressed(){ctrl.newGameButtonWasPressed();}
 
     public void setBoardWindow(){
         setBoardScene();

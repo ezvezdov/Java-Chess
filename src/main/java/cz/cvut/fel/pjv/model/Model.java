@@ -106,6 +106,9 @@ public class Model {
     public ArrayList getBoardAsArrayList(){
         return board.getBoardAsArrayList();
     }
+    public void saveGame(){board.saveGame();}
+    public void continueGame(){board.loadSavedGame();}
+
 
 
 }
