@@ -49,7 +49,7 @@ public class View extends Application {
 
     }
     private void initBoardScene(){
-        boardPane = new BoardPane(this,windowSizeX,windowSizeY,BOARD_SIZE,SQUARE_SIZE_PX);
+        boardPane = new BoardPane(this,BOARD_SIZE,SQUARE_SIZE_PX);
         boardScene = new Scene(boardPane,windowSizeX,windowSizeY);
     }
     private void setMenuScene(){
