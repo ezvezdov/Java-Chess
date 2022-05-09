@@ -22,7 +22,7 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 
 public class BoardPane extends GridPane {
-    View view = null;
+    View view;
     private int BOARD_SIZE;
     private int SQUARE_SIZE_PX;
     Rectangle[][] piecesArray;
@@ -35,11 +35,8 @@ public class BoardPane extends GridPane {
     private Color oddSquareColor = Color.SADDLEBROWN;
     private Color transparentColor = Color.TRANSPARENT;
 
-    private int windowSizeX,windowSizeY;
-    public BoardPane(View view,int windowSizeX, int windowSizeY, int BOARD_SIZE, int SQUARE_SIZE_PX) {
+    public BoardPane(View view, int BOARD_SIZE, int SQUARE_SIZE_PX) {
         this.view = view;
-        this.windowSizeX = windowSizeX;
-        this.windowSizeY = windowSizeY;
 
         this.BOARD_SIZE = BOARD_SIZE;
         this.SQUARE_SIZE_PX = SQUARE_SIZE_PX;

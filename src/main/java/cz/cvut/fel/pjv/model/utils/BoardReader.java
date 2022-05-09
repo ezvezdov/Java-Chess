@@ -3,39 +3,34 @@ package cz.cvut.fel.pjv.model.utils;
 import cz.cvut.fel.pjv.model.pieces.PieceType;
 import javafx.scene.paint.Color;
 
-import java.io.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 
-public class BoardReader {
-//    String filePath;
-    Scanner scanner;
+public class BoardReader extends FilesIO{
 
+    /**
+     * Receive layout file path and ready to give new data from getData()
+     *
+     * @param filePath path of file with board annotation
+     */
     public BoardReader(String filePath){
-        /*
-            Receive layout file path and ready to give new data from getData()
-        */
-        setScanner(filePath);
-    }
 
-    public void changeBoardLayout(String filePath){
-        /*
-            Receive new layout file path and ready to give new data from getData()
-        */
         setScanner(filePath);
-    }
-
-    private void setScanner(String filePath){
-        File file = getFileFromResource(filePath);
-        try {
-            scanner = new Scanner(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
-     @return  Arraylist of ArrayLists data about square at format { {COLOR,PieceType,coordinateA-Z,coordinate1-8} ...}
+     * Receive new layout file path and ready to give new data from getData()
+     *
+     * @param filePath path of file with board annotation
+     */
+    public void changeBoardLayout(String filePath){
+        setScanner(filePath);
+    }
+
+    /**
+     * Get information of pieces placed in board from board annotation file.
+     *
+     @return  Arraylist of ArrayLists data about squares at format { {Color pieceColor, PieceType pieceType,
+        char coordinateA-Z, char coordinate1-8} ...}
     */
     public ArrayList getData(){
         Color currentPlayerMove = null;
@@ -75,6 +70,14 @@ public class BoardReader {
         return globalList;
     }
 
+    /**
+     * Transform string (row) piece data to ArrayList
+     *
+     * @param pieceRowData String in format cTaC, c - piece color {w, b}, T - piece type {B, K, N, P, Q, R, E}
+     *                     a - coordinate in letter coordination system {a,b,c,d,e,f,g,h}
+     *                     C - int coordinate {1,2,3,4,5,6,7,8}
+     * @return ArrayList in format { {Color pieceColor, PieceType pieceType, int boardI, int boardJ} ...}
+     */
     private ArrayList getPieceData(String pieceRowData){
         ArrayList list = new ArrayList();
         if(pieceRowData.charAt(0) == 'w'){
@@ -130,18 +133,5 @@ public class BoardReader {
         return list;
 
     }
-
-
-
-    private File getFileFromResource(String fileName) throws NullPointerException {
-        try {
-            String str = getClass().getResource(fileName).getFile();
-            File file = new File(str);
-            return file;
-        } catch (NullPointerException e) {
-            System.out.println("Board annotation isn't available!");
-            e.printStackTrace();
-        }
-        return null;
-    }
 }
+

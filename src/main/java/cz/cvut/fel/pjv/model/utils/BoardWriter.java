@@ -1,45 +1,28 @@
 package cz.cvut.fel.pjv.model.utils;
 
-import cz.cvut.fel.pjv.model.pieces.Piece;
 import cz.cvut.fel.pjv.model.pieces.PieceType;
 import javafx.scene.paint.Color;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 
-public class BoardWriter {
-    String filePath;
-    File file;
-    PrintWriter printWriter;
+public class BoardWriter extends FilesIO{
 
-
+    /**
+     *
+     * @param filePath path of file for saving game
+     */
     public BoardWriter(String filePath){
-        /*
-            Receive layout file path and ready to give new data from getData()
-        */
         setPrintStream(filePath);
     }
 
-
-    private void setPrintStream(String filePath){
-        this.file = getFileFromResource(filePath);
-        try {
-            printWriter = new PrintWriter(this.file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
+    /**
+     * Print data of current board status to file.
+     *
+     * @param boardData Representation of board as an ArrayList of ArrayLists
+     *                  in format { {Color pieceColor, PieceType pieceType, int boardI, int boardJ} ...}
+     * @param nextMove Color of next move player
+     */
     public void setData(ArrayList boardData, Color nextMove){
-        /**
-         * @param  Arraylist of ArrayLists data about square at format { {COLOR,PieceType,coordinateA-Z,coordinate1-8} ...}
-         */
-
         for(int i = 0; i < boardData.size(); i++){
             ArrayList currentPieceData = (ArrayList) boardData.get(i);
             printPiece(currentPieceData);
@@ -51,7 +34,13 @@ public class BoardWriter {
         printWriter.close();
     }
 
-    public void printPiece(ArrayList currentPieceData){
+    /**
+     * Transform piece data to string and print it to file.
+     *
+     * @param currentPieceData data of current piece in format
+     *                         { {Color pieceColor, PieceType pieceType, int boardI, int boardJ} ...}
+     */
+    private void printPiece(ArrayList currentPieceData){
         //Raw data
         Color pieceColor = (Color) currentPieceData.get(0);
         PieceType pieceType = (PieceType) currentPieceData.get(1);
@@ -90,15 +79,5 @@ public class BoardWriter {
 
     }
 
-    private File getFileFromResource(String fileName) throws NullPointerException {
-        try {
-            String str = getClass().getResource(fileName).getFile();
-            File file = new File(str);
-            return file;
-        } catch (NullPointerException e) {
-            System.out.println("Board annotation isn't available!");
-            e.printStackTrace();
-        }
-        return null;
-    }
+
 }

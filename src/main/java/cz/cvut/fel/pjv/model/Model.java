@@ -3,6 +3,7 @@ package cz.cvut.fel.pjv.model;
 import cz.cvut.fel.pjv.Controller;
 import cz.cvut.fel.pjv.model.pieces.Piece;
 import cz.cvut.fel.pjv.model.pieces.PieceType;
+import cz.cvut.fel.pjv.model.utils.PGNSaver;
 import cz.cvut.fel.pjv.view.View;
 import javafx.scene.paint.Color;
 
@@ -19,6 +20,14 @@ public class Model {
     private Boolean isSelectedPiece = false;
     private int selectedPieceI, selectedPieceJ;
 
+    Player player1, player2;
+    Player currentPlayerMove;
+
+
+
+    String PGN_FILE_PATH = "/saved_pgn_games/test.pgn";
+    PGNSaver pgnSaver = new PGNSaver(PGN_FILE_PATH);
+
     public Model(Controller controller) {
         ctrl = controller;
     }
@@ -28,6 +37,15 @@ public class Model {
         resetBoard();
 
     }
+
+    public void startMultiplayerGame(){
+        resetBoard();
+    }
+
+    public void startSinglePlayerGame(){
+        resetBoard();
+    }
+
     private void resetBoard(){
         board = new Board();
         currentPlayerColor = board.getNextMove();
@@ -108,6 +126,13 @@ public class Model {
     }
     public void saveGame(){board.saveGame();}
     public void continueGame(){board.loadSavedGame();}
+
+    public void saveGameAsPGN(){
+        pgnSaver.savePGN();
+    }
+    private void addMoveToPGN(int fromI, int fromJ, int toI, int toJ){
+        pgnSaver.addMove(board.getSquareStatus(fromI,fromJ),board.getSquareStatus(toI,toJ));
+    }
 
 
 

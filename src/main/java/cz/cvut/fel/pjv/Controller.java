@@ -47,6 +47,9 @@ public class Controller {
         model.startGame();
         view.changeBoardView(getBoardAsArrayList());
     }
+    public void saveGamePGNAction(){
+        model.saveGameAsPGN();
+    }
 
     public void updateBoard(ArrayList list){
         view.changeBoardView(list);

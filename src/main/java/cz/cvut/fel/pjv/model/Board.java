@@ -8,19 +8,18 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 
 public class Board {
-    private final int BOARD_SIZE = 8;
-    Square[][] board;
-    BoardReader br = null;
-    BoardWriter bw = null;
-
     private String START_BOARD_FILE = "/boardData/startBoard.txt";
     private String SAVED_BOARD_FILE = "/boardData/savedBoard.txt";
+    private final int BOARD_SIZE = 8;
+
+    Square[][] board;
+    BoardReader br = new BoardReader(START_BOARD_FILE);;
+    BoardWriter bw = null;
 
     private Color nextMove;
 
     public Board() {
         board = new Square[BOARD_SIZE][BOARD_SIZE];
-        br = new BoardReader(START_BOARD_FILE);
 
         loadBoard();
     }
@@ -29,26 +28,30 @@ public class Board {
         return nextMove;
     }
 
-    public ArrayList getSquareStatus(int x, int y){
-        /**
-         * @return ArrayList wtih square data in format {Color, PieceType}
-         */
+    /**
+     *
+     * @param boardI I coordinate of square in boardX system
+     * @param boardJ J coordinate of square in boardX system
+     * @return ArrayList wtih square data in format {Color pieceColor, PieceType pieceType, int boardI, int boardJ}
+     */
+    public ArrayList getSquareStatus(int boardI, int boardJ){
         ArrayList list = new ArrayList();
-        list.add(board[x][y].pieceColor);
-        list.add(board[x][y].pieceType);
+        list.add(board[boardI][boardJ].pieceColor);
+        list.add(board[boardI][boardJ].pieceType);
+        list.add(boardI);
+        list.add(boardJ);
         return list;
     }
 
+    /**
+     *
+     * @return ArrayList of ArrayLists in format { {Color pieceColor, PieceType pieceType, int boardI, int boardJ} ...}
+     */
     public ArrayList getBoardAsArrayList(){
         ArrayList boardArrayList = new ArrayList();
         for(int i = 0; i < BOARD_SIZE; i++){
             for(int j = 0; j < BOARD_SIZE; j++){
-                ArrayList currentSquare = new ArrayList();
-                currentSquare.add(board[i][j].pieceColor);
-                currentSquare.add(board[i][j].pieceType);
-                currentSquare.add(i);
-                currentSquare.add(j);
-                boardArrayList.add(currentSquare);
+                boardArrayList.add(getSquareStatus(i,j));
             }
         }
         return boardArrayList;
@@ -57,7 +60,7 @@ public class Board {
     public void loadBoard(){
         ArrayList boardData = br.getData();
         System.out.println(boardData.toString());
-        System.out.println("BoardSize " + boardData.size());
+
         for(int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++){
             ArrayList currentPiece = (ArrayList) boardData.get(i);
             board[(int) currentPiece.get(2)][(int) currentPiece.get(3)] = new Square((Color)currentPiece.get(0),(PieceType)currentPiece.get(1),(int) currentPiece.get(2),(int) currentPiece.get(3));
@@ -89,31 +92,17 @@ public class Board {
         if( !board[fromI][fromJ].piece.isValidMove(board, fromI, fromJ, toI, toJ) ){
             return new ArrayList();
         }
+        ArrayList globalList = new ArrayList();
+
         board[toI][toJ].setPiece(board[fromI][fromJ]);
         board[fromI][fromJ].setEmpty();
-        ArrayList globalList = new ArrayList();
-        ArrayList list1 = new ArrayList(), list2 = new ArrayList();
-        list1.add(board[toI][toJ].pieceColor);
-        list1.add(board[toI][toJ].pieceType);
-        list1.add(toI);
-        list1.add(toJ);
 
-        list2.add(board[fromI][fromJ].pieceColor);
-        list2.add(board[fromI][fromJ].pieceType);
-        list2.add(fromI);
-        list2.add(fromJ);
-        globalList.add(list1);
-        globalList.add(list2);
+
+        globalList.add(getSquareStatus(toI,toJ));
+        globalList.add(getSquareStatus(fromI,fromJ));
 
         return globalList;
-
     }
-
-
-
-
-
-
 
 
 
