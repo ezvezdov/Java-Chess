@@ -5,7 +5,7 @@
 # wRa1: w - white Rook at A1 position
 # Empty positions has format wEa1 or bEa1 - empty at postion A1
 #
-# @b/@w indicates piece color, which may do next move
+# @b and @w indicates piece color, which may do next move
 @w
 wRa1 wNb1 wBc1 wQd1 wKe1 wBf1 wNg1 wRh1
 wPa2 wPb2 wPc2 wPd2 wPe2 wPf2 wPg2 wPh2
