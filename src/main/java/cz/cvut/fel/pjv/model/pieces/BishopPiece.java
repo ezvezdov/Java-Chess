@@ -11,7 +11,7 @@ public class BishopPiece extends Piece{
     }
 
     @Override
-    protected ArrayList makeAvailableMovesList(Square[][] board, int fromI, int fromJ) {
+    public ArrayList makeAvailableMovesList(Square[][] board, int fromI, int fromJ) {
         ArrayList availableMovesList = new ArrayList();
         int j = fromJ+1;
         for(int i = fromI+1; i < BOARD_SIZE && j < BOARD_SIZE; i++){

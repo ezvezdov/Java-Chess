@@ -39,5 +39,6 @@ public abstract class Piece {
     }
 
 
-    protected abstract ArrayList makeAvailableMovesList(Square[][] board, int fromI, int fromJ);
+    public abstract ArrayList makeAvailableMovesList(Square[][] board, int fromI, int fromJ);
+
 }

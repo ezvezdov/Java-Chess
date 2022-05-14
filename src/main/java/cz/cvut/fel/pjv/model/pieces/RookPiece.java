@@ -11,7 +11,7 @@ public class RookPiece extends Piece{
     }
 
     @Override
-    protected ArrayList makeAvailableMovesList(Square[][] board, int fromI, int fromJ) {
+    public ArrayList makeAvailableMovesList(Square[][] board, int fromI, int fromJ) {
         ArrayList availableMovesList = new ArrayList();
         for(int i = fromI+1; i < BOARD_SIZE; i++){
             if(!board[i][fromJ].isEmpty()){
