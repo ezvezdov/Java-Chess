@@ -1,0 +1,17 @@
+# Format annotation:
+# w/b/E - white/black/empty
+# R/N/B/Q/K/P/E - Rook/Knight/Bishop/Queen/King/Pawn/Empty
+# a1 - A1 (coordinates of piece in chess coordination system)
+# wRa1: w - white Rook at A1 position
+# Empty positions has format wEa1 or bEa1 - empty at postion A1
+#
+# @b and @w indicates piece color, which may do next move
+@w
+bRa1 bNb1 bBc1 bQd1 bKe1 bBf1 bNg1 bRh1
+bPa2 bPb2 bPc2 bPd2 bPe2 bPf2 bPg2 bPh2
+wEa3 wEb3 wEc3 wEd3 wEe3 wEf3 wEg3 wEh3
+wEa4 wEb4 wEc4 wEd4 wEe4 wEf4 wEg4 wEh4
+wEa5 wEb5 wEc5 wEd5 wEe5 wEf5 wEg5 wEh5
+wEa6 wEb6 wEc6 wEd6 wEe6 wEf6 wEg6 wEh6
+wPa7 wPb7 wPc7 wPd7 wPe7 wPf7 wPg7 wPh7
+wRa8 wNb8 wBc8 wQd8 wKe8 wBf8 wNg8 wRh8
