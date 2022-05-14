@@ -1,20 +1,19 @@
 package cz.cvut.fel.pjv.model.utils;
 
+import cz.cvut.fel.pjv.model.Player;
 import cz.cvut.fel.pjv.model.pieces.PieceType;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class PGNSaver extends FilesIO{
-    String PGN_DIRECTORY_PATH = "/Saved PGN games";
-    ArrayList moves;
+    private final String PGN_DIRECTORY_PATH = "/Saved PGN games/";
+    private ArrayList moves = new ArrayList();
 
-    /**
-     *  Construct PGNSaver object to manage PGN files.
-     *
-     * @param filePath
-     */
-    public PGNSaver(String filePath){
-        setPrintStreamForUser(System.getProperty("user.dir") + PGN_DIRECTORY_PATH);
+
+    public PGNSaver() {
+        createDirectory(System.getProperty("user.dir") + PGN_DIRECTORY_PATH);
     }
 
     /**
@@ -53,7 +52,7 @@ public class PGNSaver extends FilesIO{
         //String data to print
         String pieceTypeString = "B";
         char coordinateIChar = (char) ('a' + coordinateI);
-        String captureString = isCapture ? "x" : "";
+        String captureString = "";//isCapture ? "x" : "";
         coordinateJ++; //Coordinate starts from 1
 
         switch (pieceType){
@@ -83,7 +82,17 @@ public class PGNSaver extends FilesIO{
         moves.add(pieceTypeString + captureString + coordinateIChar + coordinateJ);
     }
 
-    public void savePGN(){
+
+    private void printTags(Player player1, Player player2){
+        printWriter.println("[Event \"Javafx Chess Game\"]");
+        printWriter.println("[Site \"Prague, Czech Republic\"]");
+        printWriter.println("[Date \"" + new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()) + "\"]");
+        printWriter.println("[" + player1.getPlayerColorAsString() + " \"" + player1.getPlayerName() + "\"]");
+        printWriter.println("[" + player2.getPlayerColorAsString() + " \"" + player2.getPlayerName() + "\"]");
+
+    }
+
+    private void printMovesData(){
         int counter = 1;
         int lineSize = 0;
         int maxLineSize = 255;
@@ -96,6 +105,8 @@ public class PGNSaver extends FilesIO{
             }
 
             printWriter.print(moves.get(i));
+            printWriter.print(" ");
+
             lineSize+= ((String) moves.get(i)).length();
 
             if(lineSize >= maxLineSize){
@@ -103,6 +114,23 @@ public class PGNSaver extends FilesIO{
                 lineSize = 0;
             }
         }
+    }
+
+    private String generatePGNFileName(){
+        String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HHmmss").format(Calendar.getInstance().getTime());
+        String absoluteFilePath = System.getProperty("user.dir") + PGN_DIRECTORY_PATH + timeStamp + ".pgn";
+        return absoluteFilePath;
+    }
+
+    public void savePGN(Player player1, Player player2){
+        //Generate file and directory
+        String fileName = generatePGNFileName();
+        setPrintStreamForUser(fileName);
+
+        printTags(player1, player2);
+        printMovesData();
+
+        closePrintStream();
     }
 }
 
