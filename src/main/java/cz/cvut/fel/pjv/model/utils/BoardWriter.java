@@ -7,12 +7,15 @@ import java.util.ArrayList;
 
 public class BoardWriter extends FilesIO{
 
+    private String filePath;
+
+
     /**
      *
      * @param filePath path of file for saving game
      */
-    public BoardWriter(String filePath){
-        setPrintStream(filePath);
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 
     /**
@@ -20,18 +23,23 @@ public class BoardWriter extends FilesIO{
      *
      * @param boardData Representation of board as an ArrayList of ArrayLists
      *                  in format { {Color pieceColor, PieceType pieceType, int boardI, int boardJ} ...}
-     * @param nextMove Color of next move player
+     * @param currentMove Color of next move player
      */
-    public void setData(ArrayList boardData, Color nextMove){
+    public void setData(ArrayList boardData, Color currentMove, boolean isSinglePlayer){
+        setPrintStream(filePath);
+
         for(int i = 0; i < boardData.size(); i++){
             ArrayList currentPieceData = (ArrayList) boardData.get(i);
             printPiece(currentPieceData);
         }
 
-        String nextMoveString = nextMove == Color.BLACK ? "b" : "w";
+        String nextMoveString = currentMove == Color.BLACK ? "b" : "w";
+        printWriter.println("@" + nextMoveString);
 
-        printWriter.print("@" + nextMoveString);
-        printWriter.close();
+        String isSinglePlayerString = isSinglePlayer ? "s" : "m";
+        printWriter.println("$" + isSinglePlayerString);
+
+        closePrintStream();
     }
 
     /**

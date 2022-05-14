@@ -1,41 +1,36 @@
 package cz.cvut.fel.pjv.model.utils;
 
+import cz.cvut.fel.pjv.model.Board;
 import cz.cvut.fel.pjv.model.pieces.PieceType;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
-
 public class BoardReader extends FilesIO{
 
+    Board board;
+    String filePath;
+
+    public BoardReader(Board board){
+        this.board = board;
+    }
+
+
+
     /**
-     * Receive layout file path and ready to give new data from getData()
+     * Receive new layout file path and ready to set new layout using setData()
      *
      * @param filePath path of file with board annotation
      */
-    public BoardReader(String filePath){
-
-        setScanner(filePath);
+    public void setFilePath(String filePath){
+        this.filePath = filePath;
     }
 
     /**
-     * Receive new layout file path and ready to give new data from getData()
+     * Get information of pieces placed in board from board annotation file and set it on board.
      *
-     * @param filePath path of file with board annotation
-     */
-    public void changeBoardLayout(String filePath){
-        setScanner(filePath);
-    }
-
-    /**
-     * Get information of pieces placed in board from board annotation file.
-     *
-     @return  Arraylist of ArrayLists data about squares at format { {Color pieceColor, PieceType pieceType,
-        char coordinateA-Z, char coordinate1-8} ...}
     */
-    public ArrayList getData(){
-        Color currentPlayerMove = null;
+    public void setData(){
+        setScanner(filePath);
 
-        ArrayList globalList = new ArrayList();
         while (scanner.hasNext()){
             String line = scanner.nextLine();
 
@@ -52,86 +47,99 @@ public class BoardReader extends FilesIO{
                     break;
                 }
                 else if(curPieceData.length() >= 2 && curPieceData.charAt(0) == '@' ){
-                    currentPlayerMove = curPieceData.charAt(1) == 'w' ? Color.WHITE : Color.BLACK;
+                    setCurrentMoveColor(curPieceData.charAt(1));
+                }
+                else if(curPieceData.length() >= 2 && curPieceData.charAt(0) == '$' ){
+                    setIsSinglePlayer(curPieceData.charAt(1));
                 }
                 else if(curPieceData.length() == 4){
-                    ArrayList list = getPieceData(curPieceData);
-                    if(list == null){
-                        continue;
-                    }
-                    globalList.add(list);
+                    setPiece(curPieceData);
                 }
             }
         }
-        if(currentPlayerMove == null){
-            return null;
-        }
-        globalList.add(currentPlayerMove);
-        return globalList;
+        scanner.close();
     }
 
     /**
-     * Transform string (row) piece data to ArrayList
+     * Transform string (row) piece data to ArrayList and set it on board
      *
      * @param pieceRowData String in format cTaC, c - piece color {w, b}, T - piece type {B, K, N, P, Q, R, E}
      *                     a - coordinate in letter coordination system {a,b,c,d,e,f,g,h}
      *                     C - int coordinate {1,2,3,4,5,6,7,8}
-     * @return ArrayList in format { {Color pieceColor, PieceType pieceType, int boardI, int boardJ} ...}
      */
-    private ArrayList getPieceData(String pieceRowData){
-        ArrayList list = new ArrayList();
+    private void setPiece(String pieceRowData){
+
+        Color pieceColor;
+        PieceType pieceType;
+        int boardI, boardJ;
+
         if(pieceRowData.charAt(0) == 'w'){
-            list.add(Color.WHITE);
+            pieceColor = Color.WHITE;
         }
         else if(pieceRowData.charAt(0) == 'b'){
-            list.add(Color.BLACK);
+            pieceColor = Color.BLACK;
         }
-        else {
-            return null;
-        }
+        else {return;}
 
         if(pieceRowData.charAt(1) == 'B'){
-            list.add(PieceType.BISHOP);
+            pieceType = PieceType.BISHOP;
         }
         else if(pieceRowData.charAt(1) == 'K') {
-            list.add(PieceType.KING);
+            pieceType = PieceType.KING;
         }
         else if(pieceRowData.charAt(1) == 'N') {
-            list.add(PieceType.KNIGHT);
+            pieceType = PieceType.KNIGHT;
         }
         else if(pieceRowData.charAt(1) == 'P') {
-            list.add(PieceType.PAWN);
+            pieceType = PieceType.PAWN;
         }
         else if(pieceRowData.charAt(1) == 'Q') {
-            list.add(PieceType.QUEEN);
+            pieceType = PieceType.QUEEN;
         }
         else if(pieceRowData.charAt(1) == 'R') {
-            list.add(PieceType.ROOK);
+            pieceType = PieceType.ROOK;
         }
         else if(pieceRowData.charAt(1) == 'E'){
-            list.add(PieceType.EMPTY);
+            pieceType = PieceType.EMPTY;
         }
-        else {
-            return null;
-        }
+        else {return;}
 
         if (pieceRowData.charAt(2) >= 'a' && pieceRowData.charAt(2) <= 'h'){
-            list.add(pieceRowData.charAt(2) - 'a');
-
+            boardI = pieceRowData.charAt(2) - 'a';
         }
-        else{
-            return null;
-        }
+        else{return;}
 
         if(pieceRowData.charAt(3) >= '1' && pieceRowData.charAt(3) <= '8'){
-            list.add(pieceRowData.charAt(3) - '1');
+            boardJ = pieceRowData.charAt(3) - '1';
+        }
+        else{return;}
+
+        board.setSquare(pieceColor,pieceType,boardI,boardJ);
+    }
+
+    /**
+     * Set current move player
+     *
+     * @param color current move player color
+     */
+    private void setCurrentMoveColor(char color){
+        if(color == 'w'){
+            board.setCurrentPlayerColor(Color.WHITE);
         }
         else{
-            return null;
+            board.setCurrentPlayerColor(Color.BLACK);
         }
 
-        return list;
-
     }
+
+    /**
+     * Set isSinglePlayer variable
+     *
+     * @param isSinglePlayer
+     */
+    private void setIsSinglePlayer(char isSinglePlayer){
+        board.setIsSinglePlayer(isSinglePlayer == 's');
+    }
+
 }
 

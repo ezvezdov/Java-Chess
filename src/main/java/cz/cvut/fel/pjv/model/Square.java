@@ -3,6 +3,8 @@ package cz.cvut.fel.pjv.model;
 import cz.cvut.fel.pjv.model.pieces.*;
 import javafx.scene.paint.Color;
 
+import java.util.ArrayList;
+
 public class Square {
     private int boardI;
     private int boardJ;
@@ -31,6 +33,16 @@ public class Square {
 
     public boolean isEmpty(){
         return pieceType == PieceType.EMPTY;
+    }
+
+    public boolean isOpponent(Color color){
+        return color != getPieceColor();
+    }
+    public boolean isEmptyOrOpponent(Color color){
+        if(isEmpty()){
+            return true;
+        }
+        return isOpponent(color);
     }
 
     public void setEmpty(){
@@ -66,6 +78,16 @@ public class Square {
                 break;
         }
 
+    }
+    public boolean isValidMove(Square[][] board, int toI, int toJ){
+        return this.piece.isValidMove(board, this.boardI, this.boardJ, toI, toJ);
+    }
+
+    public ArrayList getPieceAvailableMoves(Square[][] board, int fromI, int fromJ){
+        if(board[fromI][fromJ].isEmpty()){
+            return new ArrayList();
+        }
+        return this.piece.makeAvailableMovesList(board,fromI, fromJ);
     }
 
 }

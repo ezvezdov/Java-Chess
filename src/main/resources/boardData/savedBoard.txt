@@ -6,7 +6,9 @@
 # Empty positions has format wEa1 or bEa1 - empty at postion A1
 #
 # @b and @w indicates piece color, which may do next move
+# $s and $m indicates is game with Single Player
 @w
+$s
 wRa1 wNb1 wBc1 wQd1 wKe1 wBf1 wNg1 wRh1
 wPa2 wPb2 wPc2 wPd2 wPe2 wPf2 wPg2 wPh2
 wEa3 wEb3 wEc3 wEd3 wEe3 wEf3 wEg3 wEh3

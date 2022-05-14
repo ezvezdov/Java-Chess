@@ -12,20 +12,23 @@ public class Board {
     private String SAVED_BOARD_FILE = "/boardData/savedBoard.txt";
     private final int BOARD_SIZE = 8;
 
+    private Model model;
     Square[][] board;
-    BoardReader br = new BoardReader(START_BOARD_FILE);;
+    BoardReader br;
     BoardWriter bw = null;
 
-    private Color nextMove;
+    public Board(Model model) {
+        this.model = model;
 
-    public Board() {
         board = new Square[BOARD_SIZE][BOARD_SIZE];
-
+        initBoardReader();
         loadBoard();
     }
 
-    public Color getNextMove(){
-        return nextMove;
+
+    private void initBoardReader(){
+        br = new BoardReader(this);
+        br.setFilePath(START_BOARD_FILE);
     }
 
     /**
@@ -57,30 +60,40 @@ public class Board {
         return boardArrayList;
     }
 
-    public void loadBoard(){
-        ArrayList boardData = br.getData();
-        System.out.println(boardData.toString());
+    public void setSquare(Color pieceColor, PieceType pieceType, int boardI, int boardJ){
+        board[boardI][boardJ] = new Square(pieceColor,pieceType,boardI,boardJ);
+    }
+    public void setCurrentPlayerColor(Color color){
+        model.setCurrentPlayerColor(color);
+    }
 
-        for(int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++){
-            ArrayList currentPiece = (ArrayList) boardData.get(i);
-            board[(int) currentPiece.get(2)][(int) currentPiece.get(3)] = new Square((Color)currentPiece.get(0),(PieceType)currentPiece.get(1),(int) currentPiece.get(2),(int) currentPiece.get(3));
-        }
-        nextMove = (Color) boardData.get(BOARD_SIZE * BOARD_SIZE);
+    public void setIsSinglePlayer(boolean isSingleplayer){
+        model.setIsSinglePlayer(isSingleplayer);
+    }
+
+    public void loadBoard(){
+        br.setData();
     }
 
     public void loadSavedGame(){
-        br.changeBoardLayout(SAVED_BOARD_FILE);
+        br.setFilePath(SAVED_BOARD_FILE);
         loadBoard();
     }
 
     public void saveGame(){
         if(bw == null){
-            bw = new BoardWriter(SAVED_BOARD_FILE);
+            bw = new BoardWriter();
         }
+        bw.setFilePath(SAVED_BOARD_FILE);
         ArrayList list = getBoardAsArrayList();
         System.out.println("BoardSize2 " + list.size());
-        bw.setData(list,nextMove);
+        bw.setData(list,model.getCurrentPlayerColor(),model.isSinglePlayer());
         System.out.println("Game was saved!");
+    }
+
+    public boolean isValidMove(int fromI, int fromJ, int toI, int toJ){
+        return board[fromI][fromJ].isValidMove(board,toI,toJ);
+//        return board[fromI][fromJ].piece.isValidMove(board, fromI, fromJ, toI, toJ);
     }
 
     public ArrayList makeMove(int fromI, int fromJ, int toI, int toJ){

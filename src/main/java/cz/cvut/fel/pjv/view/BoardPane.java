@@ -1,9 +1,12 @@
 package cz.cvut.fel.pjv.view;
 
+import cz.cvut.fel.pjv.model.Board;
 import cz.cvut.fel.pjv.model.pieces.PieceType;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -17,6 +20,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -49,34 +53,48 @@ public class BoardPane extends GridPane {
 
 
         Menu m = new Menu("Game");
-        Menu n = new Menu("Menu");
-        Menu o = new Menu("Menu");
+//        Menu n = new Menu("Menu");
+//        Menu o = new Menu("Menu");
 
         // create menuitems
         MenuItem continueGameMenuItem = new MenuItem("Continue game");
         continueGameMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
-                view.continueGameButtonWasPressed();
+                view.continueGameAction();
             }
         });
-        MenuItem newGameMenuItem = new MenuItem("New game");
-        newGameMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+        MenuItem newSingleplayerGame = new MenuItem("New Singleplayer game");
+        newSingleplayerGame.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
-                view.newGameButtonWasPressed();
+//                view.newGameAction();
+                view.newSingleplayerGameAction();
+            }
+        });
+        MenuItem newMultiplayerGame = new MenuItem("New Multiplayer game");
+        newMultiplayerGame.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                view.newMultiplayerGameAction();
             }
         });
         MenuItem saveGameMenuItem = new MenuItem("Save game");
         saveGameMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
-                view.saveGameButtonWasPressed();
+                view.saveGameAction();
+            }
+        });
+        MenuItem saveGameAsPGN = new MenuItem("Save game as PGN");
+        saveGameAsPGN.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                view.saveGameAsPGNAction();
             }
         });
 
 
         // add menu items to menu
         m.getItems().add(continueGameMenuItem);
-        m.getItems().add(newGameMenuItem);
+        m.getItems().add(newSingleplayerGame);
         m.getItems().add(saveGameMenuItem);
+        m.getItems().add(saveGameAsPGN);
 
         // create a menubar
         MenuBar mb = new MenuBar();
@@ -85,8 +103,8 @@ public class BoardPane extends GridPane {
 
         // add menu to menubar
         mb.getMenus().add(m);
-        mb.getMenus().add(n);
-        mb.getMenus().add(o);
+//        mb.getMenus().add(n);
+//        mb.getMenus().add(o);
         this.add(mb,0,0,10,1);
 
 
@@ -126,17 +144,23 @@ public class BoardPane extends GridPane {
                     if(j == 0 && i != 0 && i != BOARD_SIZE+1 || j == BOARD_SIZE+1 && i != 0 && i != BOARD_SIZE+1){
                         coorOnBoard = (char)('A' + (i-1) );
                     }
+                    else if(i == 0 && j != 0 && j != BOARD_SIZE+1 || i == BOARD_SIZE+1 && j != 0 && j != BOARD_SIZE+1){
+                        coorOnBoard = (char) ('9' - j);
+                    }
 
                     Rectangle backgroundRectangle = new Rectangle(SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX);
                     backgroundRectangle.setFill(Color.WHITE);
                     Text text = new Text(String.valueOf(coorOnBoard));
-                    text.setX(50);
-                    text.setY(50);
-                    text.setTextOrigin(VPos.BASELINE);
+//                    text.setX(50);
+//                    text.setY(50);
+//                    text.setTextOrigin(VPos.BASELINE);
+//                    text.setTextAlignment(TextAlignment.CENTER);
                     text.setFont(Font.font(null, FontWeight.BOLD, 25));
+
 
                     this.add(backgroundRectangle, i, j+1);
                     this.add(text, i, j+1);
+                    GridPane.setHalignment(text, HPos.CENTER);
                     continue;
                 }
                 int shiftedI = i-1;

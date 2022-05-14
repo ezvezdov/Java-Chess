@@ -11,6 +11,8 @@ public class FilesIO {
     protected PrintWriter printWriter;
     protected Scanner scanner;
 
+    File file;
+
     /**
      * Get file from resources folder
      *
@@ -21,7 +23,7 @@ public class FilesIO {
     protected File getFileFromResource(String fileName) throws NullPointerException {
         try {
             String filePath = getClass().getResource(fileName).getFile();
-            File file = new File(filePath);
+            file = new File(filePath);
             return file;
         } catch (NullPointerException e) {
             System.out.println("Board annotation isn't available!");
@@ -38,11 +40,10 @@ public class FilesIO {
      */
     protected File getFile(String fileName) throws NullPointerException{
         try {
-            new File(fileName).mkdirs();
-            File file = new File(fileName);
+            file = new File(fileName);
             return file;
         } catch (NullPointerException e) {
-            System.out.println("Problem with saving file!");
+            System.out.println("Error while saving file!");
             e.printStackTrace();
         }
         return null;
@@ -54,10 +55,11 @@ public class FilesIO {
      * @param filePath path of file to stream
      */
     protected void setPrintStream(String filePath){
-        File file = getFileFromResource(filePath);
+        file = getFileFromResource(filePath);
         try {
-            printWriter = new PrintWriter(file);
+            printWriter = new PrintWriter(this.file);
         } catch (FileNotFoundException e) {
+            System.out.println("Error while opening " + filePath + "file for write!");
             e.printStackTrace();
         }
     }
@@ -69,22 +71,20 @@ public class FilesIO {
      */
     protected void setPrintStreamForUser(String filePath){
         File file = getFile(filePath);
+        createFile(filePath);
 
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            System.out.println("Error with opening " + filePath + "file!");
-            return;
-//            e.printStackTrace();
-        }
 
         try {
             printWriter = new PrintWriter(file);
         } catch (FileNotFoundException e) {
-            System.out.println("Error with opening " + filePath + "file!");
-            return;
-//            e.printStackTrace();
+            System.out.println("Error with opening " + filePath + "file for write!");
+            e.printStackTrace();
         }
+    }
+
+    protected void closePrintStream(){
+        printWriter.close();
+        printWriter = null;
     }
 
     /**
@@ -97,8 +97,24 @@ public class FilesIO {
         try {
             scanner = new Scanner(file);
         } catch (FileNotFoundException e) {
+            System.out.println("Error while setting input stream!");
             e.printStackTrace();
         }
+    }
+
+    protected void createFile(String filePath){
+        File file = getFile(filePath);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            System.out.println("Error while creating file!");
+            e.printStackTrace();
+        }
+    }
+
+    protected void createDirectory(String directoryPath){
+        new File(directoryPath).mkdirs();
+
     }
 
 }

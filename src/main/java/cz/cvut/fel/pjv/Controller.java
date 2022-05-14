@@ -2,50 +2,52 @@ package cz.cvut.fel.pjv;
 
 import cz.cvut.fel.pjv.model.Model;
 import cz.cvut.fel.pjv.view.View;
-import javafx.application.Application;
-
 import java.util.ArrayList;
+
+import static java.lang.System.exit;
 
 public class Controller {
     View view = null;
     Model model = null;
-    public Controller()
-    {
+
+    protected void startGame(){
         view = new View();
-        model = new Model(this);
+        model = new Model();
         view.setController(this);
-
+        model.setController(this);
         GUIStart();
-
-
     }
+
     private void GUIStart(){
         View.launch(view.getClass());
     }
-    public void startGameButtonPressed(){
-        System.out.println("Start Button pressed!");
-        model.startGame();
+
+
+    public void newMultiplayerGameAction(){
+        model.startMultiplayerGame();
         view.changeBoardView(getBoardAsArrayList());
         view.setBoardWindow();
-
-
-    }
-    public void exitButtonPressed(){
-        System.out.println("Exit Button pressed!");
     }
 
+
+    public void newSingleplayerGameAction(){
+        model.startSinglePlayerGame();
+        view.changeBoardView(getBoardAsArrayList());
+        view.setBoardWindow();
+    }
+
+    public void exitButtonAction(){
+        exit(0);
+    }
     public void boardSquareWasClicked(int indexX, int indexY){
         System.out.println(indexX + " " + indexY);
         model.squareWasClicked(indexX, indexY);
     }
-    public void saveGameButtonWasPressed(){model.saveGame();}
-    public void continueGameButtonWasPressed(){
+    public void saveGameAction(){model.saveGame();}
+    public void continueGameAction(){
         model.continueGame();
         view.changeBoardView(getBoardAsArrayList());
-    }
-    public void newGameButtonWasPressed(){
-        model.startGame();
-        view.changeBoardView(getBoardAsArrayList());
+        view.setBoardWindow();
     }
     public void saveGamePGNAction(){
         model.saveGameAsPGN();
@@ -58,6 +60,9 @@ public class Controller {
         view.selectPiece(boardI,boardJ);
     }
 
+    public String getPlayerName(){
+        return view.getPlayerName();
+    }
 
     public ArrayList getBoardAsArrayList(){
         return model.getBoardAsArrayList();
