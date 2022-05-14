@@ -1,16 +1,9 @@
 package cz.cvut.fel.pjv.view;
 
-import cz.cvut.fel.pjv.model.Board;
 import cz.cvut.fel.pjv.model.pieces.PieceType;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -20,18 +13,19 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
 
 public class BoardPane extends GridPane {
-    View view;
+    private View view;
     private int BOARD_SIZE;
     private int SQUARE_SIZE_PX;
-    Rectangle[][] piecesArray;
-    Rectangle[][] boardSquaresArray;
-    Image[][] images = null;
+    private Rectangle[][] piecesArray;
+    private Rectangle[][] boardSquaresArray;
+    private Image[][] images = null;
+
+    private ChessMenuBar chessMenuBar = null;
 
 
     private Color selectedSquareColor = Color.GOLD;
@@ -51,62 +45,7 @@ public class BoardPane extends GridPane {
 
         loadImages();
 
-
-        Menu m = new Menu("Game");
-//        Menu n = new Menu("Menu");
-//        Menu o = new Menu("Menu");
-
-        // create menuitems
-        MenuItem continueGameMenuItem = new MenuItem("Continue game");
-        continueGameMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
-                view.continueGameAction();
-            }
-        });
-        MenuItem newSingleplayerGame = new MenuItem("New Singleplayer game");
-        newSingleplayerGame.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
-//                view.newGameAction();
-                view.newSingleplayerGameAction();
-            }
-        });
-        MenuItem newMultiplayerGame = new MenuItem("New Multiplayer game");
-        newMultiplayerGame.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
-                view.newMultiplayerGameAction();
-            }
-        });
-        MenuItem saveGameMenuItem = new MenuItem("Save game");
-        saveGameMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
-                view.saveGameAction();
-            }
-        });
-        MenuItem saveGameAsPGN = new MenuItem("Save game as PGN");
-        saveGameAsPGN.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
-                view.saveGameAsPGNAction();
-            }
-        });
-
-
-        // add menu items to menu
-        m.getItems().add(continueGameMenuItem);
-        m.getItems().add(newSingleplayerGame);
-        m.getItems().add(saveGameMenuItem);
-        m.getItems().add(saveGameAsPGN);
-
-        // create a menubar
-        MenuBar mb = new MenuBar();
-//        mb.setLayoutX(50);
-        System.out.println("MenuBar height " + mb.getLayoutX());
-
-        // add menu to menubar
-        mb.getMenus().add(m);
-//        mb.getMenus().add(n);
-//        mb.getMenus().add(o);
-        this.add(mb,0,0,10,1);
-
+        setChessMenuBar();
 
         generateSquares();
 
@@ -134,6 +73,11 @@ public class BoardPane extends GridPane {
             e.printStackTrace();
 
         }
+    }
+
+    private void setChessMenuBar(){
+        chessMenuBar = new ChessMenuBar(view);
+        this.add(chessMenuBar,0,0,10,1);
     }
 
     private void generateSquares() {
