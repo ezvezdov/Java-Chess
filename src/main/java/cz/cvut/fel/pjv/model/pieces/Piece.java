@@ -11,6 +11,7 @@ public abstract class Piece {
      boolean isLeftSide = true;
 
      boolean isMoved = false;
+     boolean isTwoSquareMove = false;
 
     Piece(Color pieceColor, int boardI, int boardJ){
         this.pieceColor = pieceColor;
@@ -26,7 +27,19 @@ public abstract class Piece {
         return isMoved;
     }
 
-     ArrayList makePair(int boardI, int boardJ){
+    public boolean getTwoSquareMove() {
+        return isTwoSquareMove;
+    }
+
+    public void setTwoSquareMove() {
+        isTwoSquareMove = true;
+    }
+
+    public boolean getLeftSide(){
+        return isLeftSide;
+    }
+
+    ArrayList makePair(int boardI, int boardJ){
         ArrayList list = new ArrayList();
         list.add(boardI);
         list.add(boardJ);

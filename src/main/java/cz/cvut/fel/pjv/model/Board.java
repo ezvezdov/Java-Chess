@@ -172,6 +172,32 @@ public class Board {
         board[fromI][fromJ].setQuinInsteadOfPawn();
     }
 
+    private boolean isTwoSquareMove(int fromI, int fromJ, int toI, int toJ){
+        return board[fromI][fromJ].isPawn() && Math.abs(fromJ - toJ) == 2;
+    }
+    private void setTwoSquareMove(int fromI, int fromJ, int toI, int toJ){
+        board[fromI][fromJ].setTwoSquareMove();
+    }
+
+    private boolean isEnPassant(int fromI, int fromJ, int toI, int toJ){
+        if(!board[fromI][fromJ].isPawn()){
+            return false;
+        }
+        return Math.abs(fromI - toI) == 1 && Math.abs(fromJ - toJ) == 1 && board[toI][toJ].isEmpty();
+    }
+    private ArrayList makeEnPassant(int fromI, int fromJ, int toI, int toJ){
+        ArrayList enPassantMove;
+        if(fromI < toI){
+            board[fromI+1][fromJ].setEmpty();
+            enPassantMove = getSquareStatus(fromI+1,fromJ);
+        }
+        else{
+            board[fromI-1][fromJ].setEmpty();
+            enPassantMove = getSquareStatus(fromI-1,fromJ);
+        }
+        return enPassantMove;
+    }
+
     public ArrayList makeMove(int fromI, int fromJ, int toI, int toJ){
         /**
          * Makes move if it's available (changes)
@@ -184,6 +210,12 @@ public class Board {
         }
         if(isPromotion(fromI,fromJ,toI,toJ)){
             makePromotion(fromI,fromJ,toI,toJ);
+        }
+        if(isTwoSquareMove(fromI,fromJ,toI,toJ)){
+            setTwoSquareMove(fromI,fromJ,toI,toJ);
+        }
+        if(isEnPassant(fromI,fromJ,toI,toJ)){
+            globalList.add(makeEnPassant(fromI,fromJ,toI,toJ));
         }
 
         board[fromI][fromJ].pieceHasMoved();

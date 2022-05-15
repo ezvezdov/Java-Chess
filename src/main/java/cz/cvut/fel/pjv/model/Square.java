@@ -9,8 +9,8 @@ public class Square {
     private int boardI;
     private int boardJ;
     private Piece piece = null;
-    private PieceType pieceType;
-    private Color pieceColor;
+    private PieceType pieceType = null;
+    private Color pieceColor = null;
 
     public Square(Color pieceColor, PieceType pieceType, int boardI, int boardJ) {
         this.pieceColor = pieceColor;
@@ -54,10 +54,7 @@ public class Square {
         return pieceType == PieceType.PAWN;
     }
 
-    void setEmpty(){
-        pieceType = PieceType.EMPTY;
-        piece = null;
-    }
+
     public void pieceHasMoved(){
         piece.setPieceMoved();
     }
@@ -65,11 +62,26 @@ public class Square {
     public boolean getPieceMoved(){
         return piece.getPieceMoved();
     }
+    public boolean getTwoSquareMove(){
+        return piece.getTwoSquareMove();
+    }
+    public void setTwoSquareMove(){
+        piece.setTwoSquareMove();
+    }
+
+    public boolean getLeftSide(){
+        return piece.getLeftSide();
+    }
 
     void setPieceFromSquare(Square sq){
         pieceColor = sq.pieceColor;
         pieceType = sq.pieceType;
         piece = sq.piece;
+    }
+    void setEmpty(){
+        pieceType = PieceType.EMPTY;
+        pieceColor = Color.WHITE;
+        piece = null;
     }
 
      void setQuinInsteadOfPawn(){

@@ -46,6 +46,19 @@ public class PawnPiece extends Piece{
             if (fromI + 1 < BOARD_SIZE && fromJ + 1 < BOARD_SIZE && !board[fromI + 1][fromJ + 1].isEmpty() && board[fromI+1][fromJ+1].isOpponent(pieceColor)) {
                 availableMovesList.add(makePair(fromI+1, fromJ+1));
             }
+
+            //En passant check to left
+            if (fromI - 1 >= 0 && fromJ + 1 < BOARD_SIZE && board[fromI - 1][fromJ + 1].isEmpty() &&
+                    !board[fromI-1][fromJ].isEmpty() && board[fromI-1][fromJ].isOpponent(pieceColor) &&
+                    board[fromI-1][fromJ].getTwoSquareMove()){
+                availableMovesList.add(makePair(fromI-1,fromJ+1));
+            }
+            if (fromI + 1 < BOARD_SIZE && fromJ + 1 < BOARD_SIZE && board[fromI + 1][fromJ + 1].isEmpty() &&
+                    !board[fromI+1][fromJ].isEmpty() && board[fromI+1][fromJ].isOpponent(pieceColor) &&
+                    board[fromI+1][fromJ].getTwoSquareMove()) {
+                availableMovesList.add(makePair(fromI+1, fromJ+1));
+            }
+
         }
         else{
             if (fromJ - 1 >= 0 && board[fromI][fromJ - 1].isEmpty()) {
@@ -61,6 +74,19 @@ public class PawnPiece extends Piece{
             }
 
             if (fromI - 1 >= 0 && fromJ - 1 >= 0 && !board[fromI -1][fromJ - 1].isEmpty() && board[fromI-1][fromJ-1].isOpponent(pieceColor)) {
+                availableMovesList.add(makePair(fromI-1,fromJ-1));
+            }
+
+            //En passant check
+            if (fromI + 1 < BOARD_SIZE && fromJ - 1 >= 0 && board[fromI + 1][fromJ - 1].isEmpty() &&
+                    !board[fromI+1][fromJ-1].isEmpty() && board[fromI+1][fromJ-1].isOpponent(pieceColor) &&
+                    board[fromI+1][fromJ-1].getTwoSquareMove()) {
+                availableMovesList.add(makePair(fromI+1,fromJ-1));
+            }
+
+            if (fromI - 1 >= 0 && fromJ - 1 >= 0 && board[fromI -1][fromJ - 1].isEmpty() &&
+                    !board[fromI -1][fromJ - 1].isEmpty() && board[fromI-1][fromJ-1].isOpponent(pieceColor) &&
+                    board[fromI-1][fromJ-1].getTwoSquareMove()) {
                 availableMovesList.add(makePair(fromI-1,fromJ-1));
             }
         }
