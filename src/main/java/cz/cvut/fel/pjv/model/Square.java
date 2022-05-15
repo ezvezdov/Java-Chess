@@ -8,11 +8,9 @@ import java.util.ArrayList;
 public class Square {
     private int boardI;
     private int boardJ;
-    protected Piece piece = null;
-    protected PieceType pieceType;
-    protected Color pieceColor;
-
-    public Square() {}
+    private Piece piece = null;
+    private PieceType pieceType;
+    private Color pieceColor;
 
     public Square(Color pieceColor, PieceType pieceType, int boardI, int boardJ) {
         this.pieceColor = pieceColor;
@@ -44,13 +42,27 @@ public class Square {
         }
         return isOpponent(color);
     }
+    boolean isKing(){
+        return pieceType == PieceType.KING;
+    }
 
-    public void setEmpty(){
+    public boolean isRook(){
+        return pieceType == PieceType.ROOK;
+    }
+
+    void setEmpty(){
         pieceType = PieceType.EMPTY;
         piece = null;
     }
+    public void pieceHasMoved(){
+        piece.setPieceMoved();
+    }
 
-    public void setPiece(Square sq){
+    public boolean getPieceMoved(){
+        return piece.getPieceMoved();
+    }
+
+    void setPiece(Square sq){
         pieceColor = sq.pieceColor;
         pieceType = sq.pieceType;
         piece = sq.piece;

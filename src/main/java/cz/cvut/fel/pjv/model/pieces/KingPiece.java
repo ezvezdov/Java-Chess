@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 
 public class KingPiece extends Piece{
+
     public KingPiece(Color pieceColor, int boardI, int boardJ) {
         super(pieceColor, boardI, boardJ);
     }
@@ -52,6 +53,18 @@ public class KingPiece extends Piece{
             if(!isUnderAttack(board,fromI-1, fromJ-1)){
                 availableMoves.add(makePair(fromI-1, fromJ-1));
             }
+        }
+
+        //check  left roque
+        if(!isMoved && fromI - 4 >= 0 && board[fromI-1][fromJ].isEmpty() && board[fromI-2][fromJ].isEmpty() &&
+                board[fromI-3][fromJ].isEmpty() && board[fromI-4][fromJ].isRook() &&
+                !board[fromI-4][fromJ].getPieceMoved()){
+            availableMoves.add(makePair(fromI-2, fromJ));
+        }
+        //check right roque
+        if(!isMoved && fromI + 3 < BOARD_SIZE && board[fromI+1][fromJ].isEmpty() && board[fromI+2][fromJ].isEmpty() &&
+                board[fromI+3][fromJ].isRook() && !board[fromI+3][fromJ].getPieceMoved()){
+            availableMoves.add(makePair(fromI+2, fromJ));
         }
 
         System.out.println(availableMoves);

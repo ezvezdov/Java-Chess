@@ -13,40 +13,51 @@ public class Board {
     private final int BOARD_SIZE = 8;
 
     private Model model;
-    Square[][] board;
-    BoardReader br;
-    BoardWriter bw = null;
+    private Square[][] board;
+    private BoardReader br;
+    private BoardWriter bw;
 
     public Board(Model model) {
         this.model = model;
 
         board = new Square[BOARD_SIZE][BOARD_SIZE];
+        bw = new BoardWriter();
+
         initBoardReader();
         loadBoard();
     }
 
 
+    /**
+     * BoardReader initialization and set START_BOARD_FILE to initialize pieces positions on the board
+     */
     private void initBoardReader(){
         br = new BoardReader(this);
         br.setFilePath(START_BOARD_FILE);
     }
 
     /**
+     *  Get data about square (piece type on it, it's color, coordinates on board)
      *
      * @param boardI I coordinate of square in boardX system
      * @param boardJ J coordinate of square in boardX system
-     * @return ArrayList wtih square data in format {Color pieceColor, PieceType pieceType, int boardI, int boardJ}
+     * @return ArrayList with square data in format {Color pieceColor, PieceType pieceType, int boardI, int boardJ}
      */
     public ArrayList getSquareStatus(int boardI, int boardJ){
         ArrayList list = new ArrayList();
-        list.add(board[boardI][boardJ].pieceColor);
-        list.add(board[boardI][boardJ].pieceType);
+        list.add(board[boardI][boardJ].getPieceColor());
+        list.add(board[boardI][boardJ].getPieceType());
         list.add(boardI);
         list.add(boardJ);
         return list;
     }
+    public boolean isKing(int boardI, int boardJ){
+        return board[boardI][boardJ].isKing();
+    }
+
 
     /**
+     * Get data about whole board.
      *
      * @return ArrayList of ArrayLists in format { {Color pieceColor, PieceType pieceType, int boardI, int boardJ} ...}
      */
@@ -60,6 +71,10 @@ public class Board {
         return boardArrayList;
     }
 
+    public Square[][] getBoard() {
+        return board;
+    }
+
     public void setSquare(Color pieceColor, PieceType pieceType, int boardI, int boardJ){
         board[boardI][boardJ] = new Square(pieceColor,pieceType,boardI,boardJ);
     }
@@ -71,19 +86,25 @@ public class Board {
         model.setIsSinglePlayer(isSingleplayer);
     }
 
-    public void loadBoard(){
+    /**
+     *
+     */
+    private void loadBoard(){
         br.setData();
     }
 
+    /**
+     *  Load board from SAVED_BOARD_FILE using BoardReade/BoardWriter annotation format
+     */
     public void loadSavedGame(){
         br.setFilePath(SAVED_BOARD_FILE);
         loadBoard();
     }
 
+    /**
+     * Save game to SAVED_BOARD_FILE in BoardReade/BoardWriter annotation format
+     */
     public void saveGame(){
-        if(bw == null){
-            bw = new BoardWriter();
-        }
         bw.setFilePath(SAVED_BOARD_FILE);
         ArrayList list = getBoardAsArrayList();
         System.out.println("BoardSize2 " + list.size());
@@ -91,28 +112,73 @@ public class Board {
         System.out.println("Game was saved!");
     }
 
+    /**
+     * Return true if move valid
+     *
+     * @param fromI boardI start coordinate of piece to move
+     * @param fromJ boardJ start coordinate of piece to move
+     * @param toI   boardI destination coordinate of piece to move
+     * @param toJ   boardI destination coordinate of piece to move
+     * @return  true if move valid
+     */
     public boolean isValidMove(int fromI, int fromJ, int toI, int toJ){
         return board[fromI][fromJ].isValidMove(board,toI,toJ);
-//        return board[fromI][fromJ].piece.isValidMove(board, fromI, fromJ, toI, toJ);
+    }
+
+    /**
+     *  Returns true if king's move was part of roque
+     *
+     * @param fromI king's start boardI position
+     * @param fromJ king's start boardJ position
+     * @param toI boardI coordinate where king moves
+     * @param toJ boardJ coordinate where king moves
+     * @return true if move was a part of roque
+     */
+    private boolean isRoque(int fromI, int fromJ, int toI, int toJ){
+        return board[fromI][fromJ].isKing() && Math.abs(fromI - toI) == 2;
+    }
+
+    /**
+     *  Make Rook move if king make roque move.
+     *
+     * @param fromI king's start boardI position
+     * @param fromJ king's start boardJ position
+     * @param toI   boardI coordinate where king moves
+     * @param toJ   boardJ coordinate where king moves
+     * @return Arraylist with board changes
+     */
+    private ArrayList makeRoqueMove(int fromI, int fromJ, int toI, int toJ){
+        ArrayList roqueMove = new ArrayList();
+        if(fromI - toI == 2){
+            roqueMove = makeMove(0,0,3,0);
+        }
+        else{
+            roqueMove = makeMove(7,0,5,0);
+        }
+
+        return roqueMove;
     }
 
     public ArrayList makeMove(int fromI, int fromJ, int toI, int toJ){
         /**
-         * Makes move if it's available
+         * Makes move if it's available (changes)
          */
-        //TODO check is move available
 
-        if( !board[fromI][fromJ].piece.isValidMove(board, fromI, fromJ, toI, toJ) ){
-            return new ArrayList();
-        }
         ArrayList globalList = new ArrayList();
 
+        if(isRoque(fromI,fromJ,toI,toJ)){
+            globalList = makeRoqueMove(fromI,fromJ,toI,toJ);
+        }
+
+        board[fromI][fromJ].pieceHasMoved();
+        
         board[toI][toJ].setPiece(board[fromI][fromJ]);
         board[fromI][fromJ].setEmpty();
 
-
         globalList.add(getSquareStatus(toI,toJ));
         globalList.add(getSquareStatus(fromI,fromJ));
+
+
 
         return globalList;
     }
@@ -124,7 +190,7 @@ public class Board {
         for(int i = 0; i < BOARD_SIZE; i++){
             for(int j = 0; j < BOARD_SIZE; j++){
                 String current = "K";
-                switch (board[j][i].pieceType){
+                switch (board[j][i].getPieceType()){
                     case BISHOP:
                         current = "B ";
                         break;
