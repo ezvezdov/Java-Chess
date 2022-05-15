@@ -1,8 +1,8 @@
 package cz.cvut.fel.pjv;
 
+import cz.cvut.fel.pjv.model.GameType;
 import cz.cvut.fel.pjv.model.Model;
 import cz.cvut.fel.pjv.view.View;
-import java.util.ArrayList;
 
 import static java.lang.System.exit;
 
@@ -13,8 +13,9 @@ public class Controller {
     void startGame(){
         view = new View();
         model = new Model();
+
         view.setController(this);
-        model.setController(this);
+        model.setView(view);
         GUIStart();
     }
 
@@ -22,23 +23,25 @@ public class Controller {
         View.launch(view.getClass());
     }
 
-    private void setPlayersName(){
+    private void setPlayersNameView(){
         view.setPlayersNames(model.getPlayer1Name(),model.getPlayer2Name());
     }
 
 
     public void newMultiplayerGameAction(){
-        model.startMultiplayerGame();
-        view.changeBoardView(getBoardAsArrayList());
+        model.setPlayers(view.getPlayerName(),view.getPlayerName());
+        model.startGame(GameType.MULTIPLAYER);
+
         view.setBoardWindow();
-        setPlayersName();
+        setPlayersNameView();
     }
 
     public void newSingleplayerGameAction(){
-        model.startSinglePlayerGame();
-        view.changeBoardView(getBoardAsArrayList());
+        model.setPlayers(view.getPlayerName());
+        model.startGame(GameType.SINGLEPLAYER);
+
         view.setBoardWindow();
-        setPlayersName();
+        setPlayersNameView();
     }
 
     public void exitButtonAction(){
@@ -51,9 +54,8 @@ public class Controller {
     public void saveGameAction(){model.saveGame();}
     public void continueGameAction(){
         model.continueGame();
-        view.changeBoardView(getBoardAsArrayList());
         view.setBoardWindow();
-        setPlayersName();
+        setPlayersNameView();
     }
     public void saveGamePGNAction() {
         model.saveGameAsPGN();
@@ -63,23 +65,7 @@ public class Controller {
         model.nextMove();
     }
 
-    public void updateBoard(ArrayList list){
-        view.changeBoardView(list);
-    }
-    public void selectPiece(int boardI, int boardJ ){
-        view.selectPiece(boardI,boardJ);
-    }
+    public void GoToMenuAction(){
 
-    public void gameOver(String winnerName){
-        view.gameOver(winnerName);
-    }
-
-
-    public String getPlayerName(){
-        return view.getPlayerName();
-    }
-
-    private ArrayList getBoardAsArrayList(){
-        return model.getBoardAsArrayList();
     }
 }

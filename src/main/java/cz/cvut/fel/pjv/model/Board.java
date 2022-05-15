@@ -82,8 +82,8 @@ public class Board {
         model.setCurrentPlayerColor(color);
     }
 
-    public void setIsSinglePlayer(boolean isSingleplayer){
-        model.setIsSinglePlayer(isSingleplayer);
+    public void setGameType(GameType gameType){
+        model.setGameType(gameType);
     }
 
     /**
@@ -159,6 +159,19 @@ public class Board {
         return roqueMove;
     }
 
+    private boolean isPromotion(int fromI, int fromJ, int toI, int toJ){
+        if(!board[fromI][fromJ].isPawn()){
+            return false;
+        }
+        return toJ == 0 || toJ == BOARD_SIZE-1;
+
+    }
+
+    private void makePromotion(int fromI, int fromJ, int toI, int toJ){
+        System.out.println("PROMOTION");
+        board[fromI][fromJ].setQuinInsteadOfPawn();
+    }
+
     public ArrayList makeMove(int fromI, int fromJ, int toI, int toJ){
         /**
          * Makes move if it's available (changes)
@@ -169,10 +182,13 @@ public class Board {
         if(isRoque(fromI,fromJ,toI,toJ)){
             globalList = makeRoqueMove(fromI,fromJ,toI,toJ);
         }
+        if(isPromotion(fromI,fromJ,toI,toJ)){
+            makePromotion(fromI,fromJ,toI,toJ);
+        }
 
         board[fromI][fromJ].pieceHasMoved();
-        
-        board[toI][toJ].setPiece(board[fromI][fromJ]);
+
+        board[toI][toJ].setPieceFromSquare(board[fromI][fromJ]);
         board[fromI][fromJ].setEmpty();
 
         globalList.add(getSquareStatus(toI,toJ));

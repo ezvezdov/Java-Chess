@@ -1,6 +1,7 @@
 package cz.cvut.fel.pjv.model.utils;
 
 import cz.cvut.fel.pjv.model.Board;
+import cz.cvut.fel.pjv.model.GameType;
 import cz.cvut.fel.pjv.model.pieces.PieceType;
 import javafx.scene.paint.Color;
 
@@ -50,7 +51,7 @@ public class BoardReader extends FilesIO{
                     setCurrentMoveColor(curPieceData.charAt(1));
                 }
                 else if(curPieceData.length() >= 2 && curPieceData.charAt(0) == '$' ){
-                    setIsSinglePlayer(curPieceData.charAt(1));
+                    setGameType(curPieceData.charAt(1));
                 }
                 else if(curPieceData.length() == 4){
                     setPiece(curPieceData);
@@ -137,8 +138,14 @@ public class BoardReader extends FilesIO{
      *
      * @param isSinglePlayer
      */
-    private void setIsSinglePlayer(char isSinglePlayer){
-        board.setIsSinglePlayer(isSinglePlayer == 's');
+    private void setGameType(char isSinglePlayer){
+        if(isSinglePlayer == 's'){
+            board.setGameType(GameType.SINGLEPLAYER);
+        }
+        else{
+            board.setGameType(GameType.MULTIPLAYER);
+        }
+//        board.setIsSinglePlayer(isSinglePlayer == 's');
     }
 
 }

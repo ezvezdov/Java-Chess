@@ -1,18 +1,21 @@
 package cz.cvut.fel.pjv.model;
 
-import cz.cvut.fel.pjv.Controller;
+//import cz.cvut.fel.pjv.Controller;
 import cz.cvut.fel.pjv.model.pieces.PieceType;
 import cz.cvut.fel.pjv.model.players.ComputerPlayer;
 import cz.cvut.fel.pjv.model.players.Player;
 import cz.cvut.fel.pjv.model.utils.PGNSaver;
 import javafx.scene.paint.Color;
 
+import cz.cvut.fel.pjv.view.View;
+
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Model {
     protected final int BOARD_SIZE = 8;
-    private Controller ctrl;
+//    private Controller ctrl;
+    private  View view;
     private Board board = null;
     private PGNSaver pgnSaver = new PGNSaver();
 
@@ -23,23 +26,25 @@ public class Model {
     private Player currentPlayerMove;
     private Player player1, player2;
     private boolean isSelectedPiece = false;
+    private GameType gameType;
     private int selectedPieceI, selectedPieceJ;
-
-    private boolean isSinglePlayer = false;
 
     private boolean moveHasDone = false;
 
 
-    public void setController(Controller ctrl) {
-        this.ctrl = ctrl;
+//    public void setController(Controller ctrl) {
+//        this.ctrl = ctrl;
+//    }
+    public void setView(View view){
+        this.view = view;
     }
 
-    void setIsSinglePlayer(boolean singlePlayer) {
-        isSinglePlayer = singlePlayer;
+    void setGameType(GameType gameType) {
+        this.gameType = gameType;
     }
 
     boolean isSinglePlayer() {
-        return isSinglePlayer;
+        return gameType == GameType.SINGLEPLAYER;
     }
 
     void setCurrentPlayerColor(Color currentPlayerColor) {
@@ -63,27 +68,26 @@ public class Model {
         return player2.getPlayerName();
     }
 
+    public void setPlayers(String player1Name){
+        player1 = new Player(player1Name,Color.WHITE);
+        player2 = new ComputerPlayer(Color.BLACK);
+    }
+
+    public void setPlayers(String player1Name, String player2Name){
+        player1 = new Player(player1Name,Color.WHITE);
+        player2 = new Player(player2Name,Color.BLACK);
+    }
+
 
     public void initComputerPlayer(){
         player2 = new ComputerPlayer(Color.BLACK);
     }
 
-    public void startMultiplayerGame(){
-        String player1Name = ctrl.getPlayerName();
-        String player2Name = ctrl.getPlayerName();
-        player1 = new Player(player1Name,Color.WHITE);
-        player2 = new Player(player2Name,Color.BLACK);
-        resetBoard();
-    }
 
-    public void startSinglePlayerGame(){
-        // TODO randomise color
-        isSinglePlayer = true;
-        String player1Name = ctrl.getPlayerName();
-        player1 = new Player(player1Name,Color.WHITE);
-        initComputerPlayer();
+    public void startGame(GameType gameType){
+        this.gameType = gameType;
         resetBoard();
-
+        view.changeBoardView(getBoardAsArrayList());
     }
 
     private boolean randomiseColors(){
@@ -106,7 +110,7 @@ public class Model {
                 makeMove(boardI,boardJ);
 
                 if(isKingCaptured){
-                    ctrl.gameOver(currentPlayerMove.getPlayerName());
+                    view.gameOver(currentPlayerMove.getPlayerName());
                 }
 
                 moveHasDone = true;
@@ -141,7 +145,7 @@ public class Model {
         else{
             return;
         }
-        if(isSinglePlayer){
+        if(isSinglePlayer()){
             makeComputerMove();
         }
         unselectPiece();
@@ -155,7 +159,8 @@ public class Model {
         ArrayList changesList = board.makeMove(selectedPieceI,selectedPieceJ,boardI,boardJ);;
 
         unselectPiece();
-        ctrl.updateBoard(changesList);
+        view.changeBoardView(changesList);
+//        ctrl.updateBoard(changesList);
 
     }
 
@@ -164,14 +169,16 @@ public class Model {
         isSelectedPiece = true;
         selectedPieceI = boardI;
         selectedPieceJ = boardJ;
-        ctrl.selectPiece(boardI,boardJ);
+        view.selectPiece(boardI,boardJ);
+//        ctrl.selectPiece(boardI,boardJ);
         System.out.println("Move has done!");
     }
 
     private void unselectPiece(){
         System.out.println("Selecеeed piece is clear!");
         if(selectedPieceI != -1 && selectedPieceJ != -1) {
-            ctrl.selectPiece(selectedPieceI, selectedPieceJ);
+            view.selectPiece(selectedPieceI, selectedPieceJ);
+//            ctrl.selectPiece(selectedPieceI, selectedPieceJ);
             isSelectedPiece = false;
             selectedPieceI = -1;
             selectedPieceJ = -1;
@@ -202,9 +209,11 @@ public class Model {
 
         resetBoard();
         board.loadSavedGame();
-        if(isSinglePlayer){
+        if(isSinglePlayer()){
             initComputerPlayer();
         }
+
+        view.changeBoardView(getBoardAsArrayList());
     }
 
     public void saveGameAsPGN(){

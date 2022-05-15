@@ -50,6 +50,10 @@ public class Square {
         return pieceType == PieceType.ROOK;
     }
 
+    public boolean isPawn(){
+        return pieceType == PieceType.PAWN;
+    }
+
     void setEmpty(){
         pieceType = PieceType.EMPTY;
         piece = null;
@@ -62,10 +66,15 @@ public class Square {
         return piece.getPieceMoved();
     }
 
-    void setPiece(Square sq){
+    void setPieceFromSquare(Square sq){
         pieceColor = sq.pieceColor;
         pieceType = sq.pieceType;
         piece = sq.piece;
+    }
+
+     void setQuinInsteadOfPawn(){
+        piece = new QueenPiece(pieceColor,boardI,boardJ);
+        pieceType = PieceType.QUEEN;
     }
 
     private void initPiece(){

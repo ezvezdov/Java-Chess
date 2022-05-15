@@ -9,5 +9,7 @@ module cz.cvut.fel.pjv {
 
     opens cz.cvut.fel.pjv to javafx.fxml;
     opens cz.cvut.fel.pjv.view to javafx.fxml;
+    exports cz.cvut.fel.pjv.model;
+    opens cz.cvut.fel.pjv.model to javafx.fxml;
 }
 
