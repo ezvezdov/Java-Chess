@@ -1,6 +1,8 @@
 package cz.cvut.fel.pjv.model.utils;
 
+import cz.cvut.fel.pjv.model.GameType;
 import cz.cvut.fel.pjv.model.pieces.PieceType;
+import cz.cvut.fel.pjv.model.players.Player;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ public class BoardWriter extends FilesIO{
      *                  in format { {Color pieceColor, PieceType pieceType, int boardI, int boardJ} ...}
      * @param currentMove Color of next move player
      */
-    public void setData(ArrayList boardData, Color currentMove, boolean isSinglePlayer){
+    public void setData(ArrayList boardData, Color currentMove, GameType gameType, Player player1, Player player2){
         setPrintStream(filePath);
 
         for(int i = 0; i < boardData.size(); i++){
@@ -33,11 +35,19 @@ public class BoardWriter extends FilesIO{
             printPiece(currentPieceData);
         }
 
+        // write next move information
         String nextMoveString = currentMove == Color.BLACK ? "b" : "w";
         printWriter.println("@" + nextMoveString);
 
-        String isSinglePlayerString = isSinglePlayer ? "s" : "m";
+        // write gameType
+        String isSinglePlayerString = gameType == GameType.SINGLEPLAYER ? "s" : "m";
         printWriter.println("$" + isSinglePlayerString);
+
+        //write players names and colors
+        String playerColor1 = player1.getPlayerColor() == Color.BLACK ? "b" : "w";
+        String playerColor2 = player2.getPlayerColor() == Color.BLACK ? "b" : "w";
+        printWriter.println("%" + playerColor1 + "_" + player1.getPlayerName());
+        printWriter.println("%" + playerColor2 + "_" + player2.getPlayerName());
 
         closePrintStream();
     }

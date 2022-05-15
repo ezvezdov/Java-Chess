@@ -1,6 +1,7 @@
 package cz.cvut.fel.pjv.model;
 
 import cz.cvut.fel.pjv.model.pieces.PieceType;
+import cz.cvut.fel.pjv.model.players.Player;
 import cz.cvut.fel.pjv.model.utils.BoardReader;
 import cz.cvut.fel.pjv.model.utils.BoardWriter;
 import javafx.scene.paint.Color;
@@ -86,6 +87,10 @@ public class Board {
         model.setGameType(gameType);
     }
 
+    public void setPlayer(Player player1, Player player2){
+        model.setPlayers(player1,player2);
+    }
+
     /**
      *
      */
@@ -108,7 +113,7 @@ public class Board {
         bw.setFilePath(SAVED_BOARD_FILE);
         ArrayList list = getBoardAsArrayList();
         System.out.println("BoardSize2 " + list.size());
-        bw.setData(list,model.getCurrentPlayerColor(),model.isSinglePlayer());
+        bw.setData(list,model.getCurrentPlayerColor(),model.getGameType(),model.getPlayer1(),model.getPlayer2());
         System.out.println("Game was saved!");
     }
 

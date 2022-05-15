@@ -31,6 +31,8 @@ public class BoardPane extends GridPane {
 
     private ChessMenuBar chessMenuBar = null;
 
+    Label player1Name = new Label(), player2Name = new Label();
+
 
     private Color selectedSquareColor = Color.GOLD;
     private Color evenSquareColor = Color.BEIGE;
@@ -55,6 +57,8 @@ public class BoardPane extends GridPane {
         generateSquares();
 
         setTimerButton();
+
+        initPlayerNameLabels();
 
     }
 
@@ -87,22 +91,27 @@ public class BoardPane extends GridPane {
         this.add(chessMenuBar,0,0,20,1);
     }
 
-    void setPlayersNames(String name1, String name2){
-        Label label = new Label(name1);
-        label.setAlignment(Pos.CENTER);
-        label.setFont(Font.font(null, FontWeight.BOLD, 25));
-        label.setTextAlignment(TextAlignment.CENTER);
-        this.add(label, 10,10,14, 10);
-        GridPane.setHalignment(label, HPos.CENTER);
 
-        Label label2 = new Label(name2);
-        label2.setMaxWidth(4 * SQUARE_SIZE_PX);
-        label2.setMaxHeight(SQUARE_SIZE_PX);
-        label2.setAlignment(Pos.CENTER);
-        label2.setFont(Font.font(null, FontWeight.BOLD, 25));
-        label2.setTextAlignment(TextAlignment.CENTER);
-        this.add(label2, 10,1,14, 1);
-        GridPane.setHalignment(label2, HPos.CENTER);
+    private void initPlayerNameLabels(){
+        player1Name.setAlignment(Pos.CENTER);
+        player1Name.setFont(Font.font(null, FontWeight.BOLD, 25));
+        player1Name.setTextAlignment(TextAlignment.CENTER);
+        this.add(player1Name, 10,10,14, 10);
+        GridPane.setHalignment(player1Name, HPos.CENTER);
+
+        player2Name.setMaxWidth(4 * SQUARE_SIZE_PX);
+        player2Name.setMaxHeight(SQUARE_SIZE_PX);
+        player2Name.setAlignment(Pos.CENTER);
+        player2Name.setFont(Font.font(null, FontWeight.BOLD, 25));
+        player2Name.setTextAlignment(TextAlignment.CENTER);
+        this.add(player2Name, 10,1,14, 1);
+        GridPane.setHalignment(player2Name, HPos.CENTER);
+
+    }
+    void setPlayersNames(String name1, String name2){
+        player1Name.setText(name1);
+        player2Name.setText(name2);
+
     }
 
     private void setTimerButton(){
@@ -134,10 +143,6 @@ public class BoardPane extends GridPane {
                     Rectangle backgroundRectangle = new Rectangle(SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX);
                     backgroundRectangle.setFill(Color.WHITE);
                     Text text = new Text(String.valueOf(coorOnBoard));
-//                    text.setX(50);
-//                    text.setY(50);
-//                    text.setTextOrigin(VPos.BASELINE);
-//                    text.setTextAlignment(TextAlignment.CENTER);
                     text.setFont(Font.font(null, FontWeight.BOLD, 25));
 
                     this.add(backgroundRectangle, i, j+1);

@@ -32,15 +32,32 @@ public class Model {
     private boolean moveHasDone = false;
 
 
-//    public void setController(Controller ctrl) {
-//        this.ctrl = ctrl;
-//    }
     public void setView(View view){
         this.view = view;
     }
 
     void setGameType(GameType gameType) {
         this.gameType = gameType;
+    }
+    GameType getGameType(){
+        return gameType;
+    }
+
+    public void setPlayer(Player player) {
+        if(this.player1 != null){
+            this.player2 = player;
+            return;
+        }
+        this.player1 = player;
+    }
+
+
+    public Player getPlayer1() {
+        return player1;
+    }
+
+    public Player getPlayer2() {
+        return player2;
     }
 
     boolean isSinglePlayer() {
@@ -78,6 +95,11 @@ public class Model {
         player2 = new Player(player2Name,Color.BLACK);
     }
 
+    public void setPlayers(Player player1, Player player2){
+        this.player1 = player1;
+        this.player2 = player2;
+    }
+
 
     public void initComputerPlayer(){
         player2 = new ComputerPlayer(Color.BLACK);
@@ -87,6 +109,18 @@ public class Model {
     public void startGame(GameType gameType){
         this.gameType = gameType;
         resetBoard();
+        view.changeBoardView(getBoardAsArrayList());
+    }
+    public void continueGame(){
+        player1 = new Player("player1Name",Color.WHITE);
+        player2 = new Player("player2Name",Color.BLACK);
+
+        resetBoard();
+        board.loadSavedGame();
+        if(isSinglePlayer()){
+            initComputerPlayer();
+        }
+
         view.changeBoardView(getBoardAsArrayList());
     }
 
@@ -170,7 +204,6 @@ public class Model {
         selectedPieceI = boardI;
         selectedPieceJ = boardJ;
         view.selectPiece(boardI,boardJ);
-//        ctrl.selectPiece(boardI,boardJ);
         System.out.println("Move has done!");
     }
 
@@ -178,7 +211,6 @@ public class Model {
         System.out.println("Selecеeed piece is clear!");
         if(selectedPieceI != -1 && selectedPieceJ != -1) {
             view.selectPiece(selectedPieceI, selectedPieceJ);
-//            ctrl.selectPiece(selectedPieceI, selectedPieceJ);
             isSelectedPiece = false;
             selectedPieceI = -1;
             selectedPieceJ = -1;
@@ -202,19 +234,7 @@ public class Model {
         return board.getBoardAsArrayList();
     }
     public void saveGame(){board.saveGame();}
-    public void continueGame(){
-        //tmp players
-        player1 = new Player("player1Name",Color.WHITE);
-        player2 = new Player("player2Name",Color.BLACK);
 
-        resetBoard();
-        board.loadSavedGame();
-        if(isSinglePlayer()){
-            initComputerPlayer();
-        }
-
-        view.changeBoardView(getBoardAsArrayList());
-    }
 
     public void saveGameAsPGN(){
         pgnSaver.savePGN(player1,player2);

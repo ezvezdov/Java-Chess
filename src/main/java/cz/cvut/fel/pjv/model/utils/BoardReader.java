@@ -3,7 +3,11 @@ package cz.cvut.fel.pjv.model.utils;
 import cz.cvut.fel.pjv.model.Board;
 import cz.cvut.fel.pjv.model.GameType;
 import cz.cvut.fel.pjv.model.pieces.PieceType;
+import cz.cvut.fel.pjv.model.players.Player;
 import javafx.scene.paint.Color;
+
+import java.text.CollationKey;
+import java.util.ArrayList;
 
 public class BoardReader extends FilesIO{
 
@@ -32,6 +36,8 @@ public class BoardReader extends FilesIO{
     public void setData(){
         setScanner(filePath);
 
+        ArrayList<String> playersData = new ArrayList<String>();
+
         while (scanner.hasNext()){
             String line = scanner.nextLine();
 
@@ -53,11 +59,18 @@ public class BoardReader extends FilesIO{
                 else if(curPieceData.length() >= 2 && curPieceData.charAt(0) == '$' ){
                     setGameType(curPieceData.charAt(1));
                 }
+                else if(curPieceData.length() >= 4 && curPieceData.charAt(0) == '%' ){
+                    playersData.add(curPieceData);
+                }
                 else if(curPieceData.length() == 4){
                     setPiece(curPieceData);
                 }
             }
         }
+        if(playersData.size() >= 2){
+            setPlayers(playersData.get(0),playersData.get(1));
+        }
+
         scanner.close();
     }
 
@@ -145,6 +158,26 @@ public class BoardReader extends FilesIO{
         else{
             board.setGameType(GameType.MULTIPLAYER);
         }
+    }
+
+    private Player getPlayerFromData(String playerData){
+        Color playerColor;
+        String playerName = playerData.substring(3);
+        if(playerData.charAt(1) == 'w'){
+            playerColor = Color.WHITE;
+        }
+        else if(playerData.charAt(1) == 'b'){
+            playerColor = Color.BLACK;
+        }
+        else{
+            return null;
+        }
+        return new Player(playerName,playerColor);
+    }
+    private void setPlayers(String player1SData, String player2Data){
+
+        board.setPlayer(getPlayerFromData(player1SData),getPlayerFromData(player2Data));
+
     }
 
 }
