@@ -1,6 +1,6 @@
 package cz.cvut.fel.pjv.model.utils;
 
-import cz.cvut.fel.pjv.model.Player;
+import cz.cvut.fel.pjv.model.players.Player;
 import cz.cvut.fel.pjv.model.pieces.PieceType;
 
 import java.text.SimpleDateFormat;
@@ -48,7 +48,7 @@ public class PGNSaver extends FilesIO{
      * @param coordinateJ coordinate boardJ to which piece was moved
      * @param isCapture is piece capture another piece
      */
-    public void saveMoveAsString(PieceType pieceType, int coordinateI, int coordinateJ, boolean isCapture){
+    private void saveMoveAsString(PieceType pieceType, int coordinateI, int coordinateJ, boolean isCapture){
         //String data to print
         String pieceTypeString = "B";
         char coordinateIChar = (char) ('a' + coordinateI);

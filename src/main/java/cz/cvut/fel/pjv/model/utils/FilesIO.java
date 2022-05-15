@@ -8,10 +8,10 @@ import java.util.Scanner;
 
 public class FilesIO {
 
-    protected PrintWriter printWriter;
-    protected Scanner scanner;
+    PrintWriter printWriter;
+    Scanner scanner;
 
-    File file;
+    private File file;
 
     /**
      * Get file from resources folder
@@ -20,7 +20,7 @@ public class FilesIO {
      * @return File if it's opened successfully
      * @throws NullPointerException
      */
-    protected File getFileFromResource(String fileName) throws NullPointerException {
+    private File getFileFromResource(String fileName) throws NullPointerException {
         try {
             String filePath = getClass().getResource(fileName).getFile();
             file = new File(filePath);
@@ -38,7 +38,7 @@ public class FilesIO {
      * @return File if it's opened successfully
      * @throws NullPointerException
      */
-    protected File getFile(String fileName) throws NullPointerException{
+    private File getFile(String fileName) throws NullPointerException{
         try {
             file = new File(fileName);
             return file;
@@ -54,7 +54,7 @@ public class FilesIO {
      *
      * @param filePath path of file to stream
      */
-    protected void setPrintStream(String filePath){
+    void setPrintStream(String filePath){
         file = getFileFromResource(filePath);
         try {
             printWriter = new PrintWriter(this.file);
@@ -69,7 +69,7 @@ public class FilesIO {
      *
      * @param filePath path of file to stream
      */
-    protected void setPrintStreamForUser(String filePath){
+    void setPrintStreamForUser(String filePath){
         File file = getFile(filePath);
         createFile(filePath);
 
@@ -82,7 +82,7 @@ public class FilesIO {
         }
     }
 
-    protected void closePrintStream(){
+    void closePrintStream(){
         printWriter.close();
         printWriter = null;
     }
@@ -92,7 +92,7 @@ public class FilesIO {
      *
      * @param filePath path of file to stream
      */
-    protected void setScanner(String filePath){
+    void setScanner(String filePath){
         File file = getFileFromResource(filePath);
         try {
             scanner = new Scanner(file);
@@ -102,7 +102,7 @@ public class FilesIO {
         }
     }
 
-    protected void createFile(String filePath){
+    private void createFile(String filePath){
         File file = getFile(filePath);
         try {
             file.createNewFile();
@@ -112,7 +112,7 @@ public class FilesIO {
         }
     }
 
-    protected void createDirectory(String directoryPath){
+    void createDirectory(String directoryPath){
         new File(directoryPath).mkdirs();
 
     }

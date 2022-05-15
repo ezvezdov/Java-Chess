@@ -9,7 +9,7 @@ import javafx.scene.control.MenuItem;
 public class ChessMenuBar extends MenuBar {
     private View view;
 
-    ChessMenuBar(View view){
+     ChessMenuBar(View view){
         this.view = view;
         initMenuBar();
     }
