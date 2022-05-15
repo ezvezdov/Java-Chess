@@ -112,7 +112,4 @@ public class QueenPiece extends Piece{
 
         return availableMovesList;
     }
-//    public QueenPiece(Color pieceColor) {
-//        this.pieceColor = pieceColor;
-//    }
 }

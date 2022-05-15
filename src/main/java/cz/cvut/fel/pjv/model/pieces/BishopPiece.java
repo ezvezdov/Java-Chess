@@ -64,10 +64,6 @@ public class BishopPiece extends Piece{
             availableMovesList.add(makePair(i,j));
             j++;
         }
-
-
-
-
         return availableMovesList;
     }
 

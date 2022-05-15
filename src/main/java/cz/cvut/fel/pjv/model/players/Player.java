@@ -1,19 +1,20 @@
-package cz.cvut.fel.pjv.model;
+package cz.cvut.fel.pjv.model.players;
 
+import cz.cvut.fel.pjv.model.Square;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 
 public class Player {
-    protected String name;
-    protected Color playerColor;
+    String name;
+    Color playerColor;
 
     public Player(String name, Color playerColor) {
         this.name = name;
         this.playerColor = playerColor;
     }
 
-    public Player() {
+       Player() {
     }
 
     public String getPlayerColorAsString(){
@@ -22,7 +23,7 @@ public class Player {
         }
         return "Black";
     }
-    protected Color getPlayerColor(){
+    public Color getPlayerColor(){
         return playerColor;
     }
     public String getPlayerName(){

@@ -1,13 +1,15 @@
-package cz.cvut.fel.pjv.model;
+package cz.cvut.fel.pjv.model.players;
 
+import cz.cvut.fel.pjv.model.Square;
+import cz.cvut.fel.pjv.model.players.Player;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public class ComputerPlayer extends Player{
+public class ComputerPlayer extends Player {
 
-    public ComputerPlayer(Color playerColor) {
+     public ComputerPlayer(Color playerColor) {
         this.name = "Computer";
         this.playerColor = playerColor;
     }

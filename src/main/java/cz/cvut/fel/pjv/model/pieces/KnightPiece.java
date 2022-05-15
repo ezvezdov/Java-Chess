@@ -39,10 +39,6 @@ public class KnightPiece extends Piece{
             availableMovesList.add(makePair(fromI+1,fromJ-2));
         }
 
-
         return availableMovesList;
     }
-//    public KnightPiece(Color pieceColor) {
-//        this.pieceColor = pieceColor;
-//    }
 }

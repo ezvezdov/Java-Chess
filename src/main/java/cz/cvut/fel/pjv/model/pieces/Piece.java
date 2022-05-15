@@ -8,17 +8,25 @@ import java.util.ArrayList;
 public abstract class Piece {
     Color pieceColor;
     int BOARD_SIZE = 8;
-    boolean isLeftSide = true;
+     boolean isLeftSide = true;
 
-    public Piece(Color pieceColor, int boardI, int boardJ){
+     boolean isMoved = false;
+
+    Piece(Color pieceColor, int boardI, int boardJ){
         this.pieceColor = pieceColor;
     }
 
-    protected Piece() {
+    Piece(){}
+
+
+    public void setPieceMoved(){
+        isMoved = true;
+    }
+    public boolean getPieceMoved(){
+        return isMoved;
     }
 
-
-    protected ArrayList makePair(int boardI, int boardJ){
+     ArrayList makePair(int boardI, int boardJ){
         ArrayList list = new ArrayList();
         list.add(boardI);
         list.add(boardJ);

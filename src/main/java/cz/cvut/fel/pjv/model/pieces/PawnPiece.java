@@ -22,8 +22,6 @@ public class PawnPiece extends Piece{
         }
     }
 
-
-
     @Override
     public ArrayList makeAvailableMovesList(Square[][] board, int fromI, int fromJ){
         if(fromI != startBoardI || fromJ != startBoardJ){
