@@ -6,8 +6,8 @@ import javafx.scene.paint.Color;
 
 public class BoardReader extends FilesIO{
 
-    Board board;
-    String filePath;
+    private Board board;
+    private String filePath;
 
     public BoardReader(Board board){
         this.board = board;

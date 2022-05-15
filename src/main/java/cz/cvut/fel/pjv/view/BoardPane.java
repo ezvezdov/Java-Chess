@@ -4,6 +4,9 @@ import cz.cvut.fel.pjv.model.pieces.PieceType;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -13,6 +16,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -33,21 +37,24 @@ public class BoardPane extends GridPane {
     private Color oddSquareColor = Color.SADDLEBROWN;
     private Color transparentColor = Color.TRANSPARENT;
 
-    public BoardPane(View view, int BOARD_SIZE, int SQUARE_SIZE_PX) {
+    BoardPane(View view, int BOARD_SIZE, int SQUARE_SIZE_PX) {
         this.view = view;
 
         this.BOARD_SIZE = BOARD_SIZE;
         this.SQUARE_SIZE_PX = SQUARE_SIZE_PX;
 
+
         this.piecesArray = new Rectangle[BOARD_SIZE][BOARD_SIZE];
         this.boardSquaresArray = new Rectangle[BOARD_SIZE][BOARD_SIZE];
-        this.setBackground(new Background(new BackgroundFill(Color.GRAY,new CornerRadii(0), new Insets(0))));
+        this.setBackground(new Background(new BackgroundFill(Color.RED,new CornerRadii(0), new Insets(0))));
 
         loadImages();
 
         setChessMenuBar();
 
         generateSquares();
+
+        setTimerButton();
 
     }
 
@@ -77,7 +84,39 @@ public class BoardPane extends GridPane {
 
     private void setChessMenuBar(){
         chessMenuBar = new ChessMenuBar(view);
-        this.add(chessMenuBar,0,0,10,1);
+        this.add(chessMenuBar,0,0,20,1);
+    }
+
+    void setPlayersNames(String name1, String name2){
+        Label label = new Label(name1);
+        label.setAlignment(Pos.CENTER);
+        label.setFont(Font.font(null, FontWeight.BOLD, 25));
+        label.setTextAlignment(TextAlignment.CENTER);
+        this.add(label, 10,10,14, 10);
+        GridPane.setHalignment(label, HPos.CENTER);
+
+        Label label2 = new Label(name2);
+        label2.setMaxWidth(4 * SQUARE_SIZE_PX);
+        label2.setMaxHeight(SQUARE_SIZE_PX);
+        label2.setAlignment(Pos.CENTER);
+        label2.setFont(Font.font(null, FontWeight.BOLD, 25));
+        label2.setTextAlignment(TextAlignment.CENTER);
+        this.add(label2, 10,1,14, 1);
+        GridPane.setHalignment(label2, HPos.CENTER);
+    }
+
+    private void setTimerButton(){
+        Button timerButton = new Button("Finish move!");
+        timerButton.setMaxHeight(SQUARE_SIZE_PX);
+        timerButton.setMaxWidth(SQUARE_SIZE_PX * 4);
+        timerButton.setOnMouseClicked(new EventHandler<MouseEvent>()
+          {
+              @Override
+              public void handle(MouseEvent e) {
+                view.timerButtonAction();
+              }
+          });
+        this.add(timerButton,11,4,14,4);
     }
 
     private void generateSquares() {
@@ -100,7 +139,6 @@ public class BoardPane extends GridPane {
 //                    text.setTextOrigin(VPos.BASELINE);
 //                    text.setTextAlignment(TextAlignment.CENTER);
                     text.setFont(Font.font(null, FontWeight.BOLD, 25));
-
 
                     this.add(backgroundRectangle, i, j+1);
                     this.add(text, i, j+1);
@@ -146,9 +184,17 @@ public class BoardPane extends GridPane {
 
             }
         }
+        for(int i = BOARD_SIZE+2; i <  BOARD_SIZE+2+6; i++){
+            for (int j = 0; j <= BOARD_SIZE+1; j++) {
+                Rectangle backgroundRectangle = new Rectangle(SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX);
+                backgroundRectangle.setFill(Color.LIGHTGOLDENRODYELLOW);
+//                backgroundRectangle.setStroke(Color.BLACK);
+                this.add(backgroundRectangle, i, j+1);
+            }
+        }
     }
 
-    public void paintSelected(int boardI, int boardJ){
+    void paintSelected(int boardI, int boardJ){
         ArrayList viewCoordinates = transformBoard2View(boardI,boardJ);
         int viewI = (int) viewCoordinates.get(0);
         int viewJ = (int) viewCoordinates.get(1);
@@ -176,7 +222,7 @@ public class BoardPane extends GridPane {
         return coord;
     }
 
-    public void changeBoardViewByList(ArrayList changesList){
+    void changeBoardViewByList(ArrayList changesList){
         //{ {Color, PieceType, boardI, boardJ} ... }
         for(int i = 0; i < changesList.size(); i++){
             ArrayList squareToChange = (ArrayList) changesList.get(i);
@@ -185,7 +231,7 @@ public class BoardPane extends GridPane {
         }
     }
 
-    public void setImage(Color pieceColor, PieceType pieceType, int viewI, int viewJ){
+    private void setImage(Color pieceColor, PieceType pieceType, int viewI, int viewJ){
         System.out.println(viewI + " " + viewJ + " " +  pieceColor + " " + pieceType);
 
         if(pieceType == PieceType.EMPTY){

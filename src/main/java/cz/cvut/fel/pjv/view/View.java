@@ -2,12 +2,13 @@ package cz.cvut.fel.pjv.view;
 
 import cz.cvut.fel.pjv.Controller;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,9 +20,9 @@ public class View extends Application {
     private final int SQUARE_SIZE_PX = 50;
 
     // + 2 means add 2 squares of SQUARE_SIZE_PX for board coordinates
-    private int windowSizeX = SQUARE_SIZE_PX * (BOARD_SIZE + 2); //
+    private int windowSizeX = SQUARE_SIZE_PX * 16; //
     // + 2 means add 2 squares of SQUARE_SIZE_PX for board coordinates
-    private int windowSizeY = SQUARE_SIZE_PX * (BOARD_SIZE + 2) + 30; //
+    private int windowSizeY = SQUARE_SIZE_PX * (BOARD_SIZE + 2) + 27; //
 
     private static Stage stage = null;
     private static Scene menuScene = null;
@@ -37,38 +38,27 @@ public class View extends Application {
     @Override
     public void start(Stage stage) {
         this.stage = stage;
-
-        initMenuScene();
-        initBoardScene();
+        GUIinit();
         setMenuScene();
         stage.setTitle("JavaFX Chess");
+        stage.setResizable(false);
         stage.show();
     }
-    public void initMenuScene(){
-        Parent root = null;
-//        FXMLLoader fxmlLoader;
+    private void GUIinit(){
+        initMenuScene();
+        initBoardScene();
+    }
 
-
+    private void initMenuScene(){
         FXMLLoader fxmlLoader = new FXMLLoader(View.class.getResource("/scenesFXML/MenuScene.fxml"));
         try {
             menuScene = new Scene(fxmlLoader.load());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-//        fxmlLoader.setController(ctrl);
-//            root = FXMLLoader.load(Objects.requireNonNull(Controller.class.getResource("test.fxml")));
-//            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/test.fxml")));
-
-//        try {
-//            menuScene = new Scene(fxmlLoader.load());
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//        menuScene = new Scene(new MenuPane(this,1,2));
-
     }
+
     private void initBoardScene(){
-//        content.getChildren().setAll(FXMLLoader.load("vista2.fxml"));
         boardPane = new BoardPane(this,BOARD_SIZE,SQUARE_SIZE_PX);
         boardScene = new Scene(boardPane,windowSizeX,windowSizeY);
     }
@@ -79,22 +69,25 @@ public class View extends Application {
         stage.setScene(boardScene);
     }
 
-    public void exitButtonAction(){
+     public void exitButtonAction(){
         ctrl.exitButtonAction();
     }
-    public void boardSquareWasClicked(int boardI, int boardJ ){
+     public void boardSquareWasClicked(int boardI, int boardJ){
         ctrl.boardSquareWasClicked(boardI,boardJ);
     }
-    public void saveGameAction(){ctrl.saveGameAction();}
-    public void continueGameAction(){ctrl.continueGameAction();}
-    public void newSingleplayerGameAction(){
+     public void saveGameAction(){ctrl.saveGameAction();}
+     public void continueGameAction(){ctrl.continueGameAction();}
+     public void newSingleplayerGameAction(){
         ctrl.newSingleplayerGameAction();
     }
-    public void newMultiplayerGameAction(){
+     public void newMultiplayerGameAction(){
         ctrl.newMultiplayerGameAction();
     }
-    public void saveGameAsPGNAction(){
+     public void saveGameAsPGNAction(){
         ctrl.saveGamePGNAction();
+    }
+     public void timerButtonAction(){
+        ctrl.timerButtonAction();
     }
 
     public void setBoardWindow(){
@@ -122,11 +115,34 @@ public class View extends Application {
         return  result.get();
     }
 
-
-//-fx-background-image  url('file:/home/ezvezdov/Downloads/_114180633_hi009891314.jpg')
-//-fx-background-size  100% 100%
-
-    public void newSingleplayerGameAction2(){
-        System.out.println("KEK");
+    public void setPlayersNames(String name1, String name2){
+        boardPane.setPlayersNames(name1,name2);
     }
+
+    public void gameOver(String winnerName){
+        Dialog dialog = new Dialog<>();
+        dialog.initStyle(StageStyle.UTILITY);
+        dialog.setTitle("Game over!");
+        dialog.setHeaderText(winnerName + " win!");
+
+
+        ButtonType newGameButton = new ButtonType("Go to menu");
+        ButtonType SavePGNButton = new ButtonType("Save as PGN");
+        ButtonType ExitButton  = new ButtonType("Exit");
+
+        dialog.getDialogPane().getButtonTypes().addAll(newGameButton,SavePGNButton,ExitButton);
+        Optional<ButtonType> result = dialog.showAndWait();
+        if(result.get() == newGameButton){
+            setMenuScene();
+        }
+        if(result.get() == SavePGNButton){
+            saveGameAsPGNAction();
+            setMenuScene();
+        }
+        if(result.get() == ExitButton){
+            exitButtonAction();
+        }
+
+    }
+
 }

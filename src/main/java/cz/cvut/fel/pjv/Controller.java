@@ -10,7 +10,7 @@ public class Controller {
     View view = null;
     Model model = null;
 
-    protected void startGame(){
+    void startGame(){
         view = new View();
         model = new Model();
         view.setController(this);
@@ -22,18 +22,23 @@ public class Controller {
         View.launch(view.getClass());
     }
 
+    private void setPlayersName(){
+        view.setPlayersNames(model.getPlayer1Name(),model.getPlayer2Name());
+    }
+
 
     public void newMultiplayerGameAction(){
         model.startMultiplayerGame();
         view.changeBoardView(getBoardAsArrayList());
         view.setBoardWindow();
+        setPlayersName();
     }
-
 
     public void newSingleplayerGameAction(){
         model.startSinglePlayerGame();
         view.changeBoardView(getBoardAsArrayList());
         view.setBoardWindow();
+        setPlayersName();
     }
 
     public void exitButtonAction(){
@@ -48,9 +53,14 @@ public class Controller {
         model.continueGame();
         view.changeBoardView(getBoardAsArrayList());
         view.setBoardWindow();
+        setPlayersName();
     }
-    public void saveGamePGNAction(){
+    public void saveGamePGNAction() {
         model.saveGameAsPGN();
+    }
+
+    public void timerButtonAction(){
+        model.nextMove();
     }
 
     public void updateBoard(ArrayList list){
@@ -60,11 +70,16 @@ public class Controller {
         view.selectPiece(boardI,boardJ);
     }
 
+    public void gameOver(String winnerName){
+        view.gameOver(winnerName);
+    }
+
+
     public String getPlayerName(){
         return view.getPlayerName();
     }
 
-    public ArrayList getBoardAsArrayList(){
+    private ArrayList getBoardAsArrayList(){
         return model.getBoardAsArrayList();
     }
 }
