@@ -7,8 +7,8 @@ import cz.cvut.fel.pjv.view.View;
 import static java.lang.System.exit;
 
 public class Controller {
-    View view = null;
-    Model model = null;
+    static View view = null;
+    static Model model = null;
 
     void startGame(){
         view = new View();
@@ -32,7 +32,7 @@ public class Controller {
         model.setPlayers(view.getPlayerName(),view.getPlayerName());
         model.startGame(GameType.MULTIPLAYER);
 
-        view.setBoardWindow();
+        view.setBoardScene();
         setPlayersNameView();
     }
 
@@ -40,13 +40,19 @@ public class Controller {
         model.setPlayers(view.getPlayerName());
         model.startGame(GameType.SINGLEPLAYER);
 
-        view.setBoardWindow();
+        view.setBoardScene();
         setPlayersNameView();
     }
 
-    public void exitButtonAction(){
+    public void exitAction(){
         exit(0);
     }
+
+    public void saveAndExitAction(){
+        saveGameAction();
+        exitAction();
+    }
+
     public void boardSquareWasClicked(int indexX, int indexY){
         System.out.println(indexX + " " + indexY);
         model.squareWasClicked(indexX, indexY);
@@ -54,7 +60,7 @@ public class Controller {
     public void saveGameAction(){model.saveGame();}
     public void continueGameAction(){
         model.continueGame();
-        view.setBoardWindow();
+        view.setBoardScene();
         setPlayersNameView();
     }
     public void saveGamePGNAction() {
@@ -66,6 +72,6 @@ public class Controller {
     }
 
     public void GoToMenuAction(){
-
+        view.setMenuScene();
     }
 }

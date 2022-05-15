@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.cvut.fel.pjv.view.View">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.cvut.fel.pjv.Controller">
     <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true">
         <Image url="@ChessBackground.jpg"/>
     </ImageView>
@@ -32,7 +32,7 @@
                     text="New Multiplayer Game" textAlignment="CENTER"/>
             <Button mnemonicParsing="false" onAction="#continueGameAction" prefHeight="26.0" prefWidth="175.0"
                     text="Continue" textAlignment="CENTER"/>
-            <Button mnemonicParsing="false" onAction="#exitButtonAction" prefWidth="175.0" text="Exit"
+            <Button mnemonicParsing="false" onAction="#exitAction" prefWidth="175.0" text="Exit"
                     textAlignment="CENTER"/>
             <GridPane.rowIndex>1</GridPane.rowIndex>
         </VBox>

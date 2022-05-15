@@ -59,18 +59,22 @@ public class View extends Application {
     }
 
     private void initBoardScene(){
+//        initMenuBar();
         boardPane = new BoardPane(this,BOARD_SIZE,SQUARE_SIZE_PX);
         boardScene = new Scene(boardPane,windowSizeX,windowSizeY);
     }
-    private void setMenuScene(){
+    public void setMenuScene(){
         stage.setScene(menuScene);
     }
-    private void setBoardScene(){
+    public void setBoardScene(){
         stage.setScene(boardScene);
     }
 
      public void exitButtonAction(){
-        ctrl.exitButtonAction();
+        ctrl.exitAction();
+    }
+    public void saveAndExitAction(){
+        ctrl.saveAndExitAction();
     }
      public void boardSquareWasClicked(int boardI, int boardJ){
         ctrl.boardSquareWasClicked(boardI,boardJ);
@@ -90,9 +94,6 @@ public class View extends Application {
         ctrl.timerButtonAction();
     }
 
-    public void setBoardWindow(){
-        setBoardScene();
-    }
 
     public void changeBoardView(ArrayList list){
         boardPane.changeBoardViewByList(list);

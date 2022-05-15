@@ -145,7 +145,6 @@ public class BoardReader extends FilesIO{
         else{
             board.setGameType(GameType.MULTIPLAYER);
         }
-//        board.setIsSinglePlayer(isSinglePlayer == 's');
     }
 
 }

@@ -27,7 +27,6 @@ public class ChessMenuBar extends MenuBar {
         MenuItem newSingleplayerGame = new MenuItem("New Singleplayer game");
         newSingleplayerGame.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
-//                view.newGameAction();
                 view.newSingleplayerGameAction();
             }
         });
@@ -60,8 +59,7 @@ public class ChessMenuBar extends MenuBar {
         MenuItem saveAndExit = new MenuItem("Save and exit");
         saveAndExit.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
-                view.saveGameAction();
-                view.exitButtonAction();
+                view.saveAndExitAction();
             }
         });
 
