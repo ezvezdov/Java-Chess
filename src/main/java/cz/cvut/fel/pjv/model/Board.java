@@ -164,10 +164,10 @@ public class Board {
     private ArrayList makeRoqueMove(int fromI, int fromJ, int toI, int toJ){
         ArrayList roqueMove = new ArrayList();
         if(fromI - toI == 2){
-            roqueMove = makeMove(0,0,3,0);
+            roqueMove = makeMove(fromI-4,fromJ,fromI-1,toJ);
         }
         else{
-            roqueMove = makeMove(7,0,5,0);
+            roqueMove = makeMove(fromI+3,fromJ,fromI+1,toJ);
         }
 
         return roqueMove;
@@ -232,10 +232,12 @@ public class Board {
             globalList.add(makeEnPassant(fromI,fromJ,toI,toJ));
         }
 
-        board[fromI][fromJ].pieceHasMoved();
+
 
         board[toI][toJ].setPieceFromSquare(board[fromI][fromJ]);
         board[fromI][fromJ].setEmpty();
+
+        board[toI][toJ].pieceHasMoved();
 
         globalList.add(getSquareStatus(toI,toJ));
         globalList.add(getSquareStatus(fromI,fromJ));

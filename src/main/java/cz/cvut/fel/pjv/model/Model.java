@@ -14,7 +14,7 @@ public class Model {
     protected final int BOARD_SIZE = 8;
     private  View view;
     private Board board = null;
-    private PGNSaver pgnSaver = new PGNSaver();
+    private final PGNSaver pgnSaver = new PGNSaver();
 
     private Player currentPlayerMove;
     private Player player1 = new Player("player1", Color.WHITE);

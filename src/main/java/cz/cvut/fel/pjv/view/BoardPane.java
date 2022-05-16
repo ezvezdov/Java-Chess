@@ -5,16 +5,16 @@ import cz.cvut.fel.pjv.model.Model;
 import cz.cvut.fel.pjv.model.pieces.PieceType;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -23,34 +23,31 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
-
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Objects;
 
 public class BoardPane extends GridPane {
-    private View view;
-    private Model model;
-    private Controller ctrl;
-    private int BOARD_SIZE;
-    private int SQUARE_SIZE_PX;
-    private Rectangle[][] piecesArray;
-    private Rectangle[][] boardSquaresArray;
+    private final View view;
+    private final Model model;
+    private final Controller ctrl;
+    private final int BOARD_SIZE;
+    private final int SQUARE_SIZE_PX;
+    private final Rectangle[][] piecesArray;
+    private final Rectangle[][] boardSquaresArray;
     private Image[][] images = null;
 
-    private ChessMenuBar chessMenuBar = null;
-
-    private Label player1Name = new Label(), player2Name = new Label();
+    private final Label player1Name = new Label(), player2Name = new Label();
 
     Label player1Timer = new Label("00:00"), player2Timer = new Label("00:00");
     ChangeListener<Number> timer1Listener, timer2Listener;
     boolean isTimersSet = false;
 
-    private Color selectedSquareColor = Color.GOLD;
-    private Color evenSquareColor = Color.BEIGE;
-    private Color oddSquareColor = Color.SADDLEBROWN;
-    private Color transparentColor = Color.TRANSPARENT;
+    private final Color selectedSquareColor = Color.GOLD;
+    private final Color evenSquareColor = Color.BEIGE;
+    private final Color oddSquareColor = Color.SADDLEBROWN;
+    private final Color transparentColor = Color.TRANSPARENT;
 
     BoardPane(View view, Controller ctrl, Model model, int BOARD_SIZE, int SQUARE_SIZE_PX) {
         this.view = view;
@@ -85,19 +82,19 @@ public class BoardPane extends GridPane {
         images = new Image[2][6];
 
         try {
-            images[0][0] = new Image(new FileInputStream(getClass().getResource("/piecesImages/White/bishop.png").getFile()));
-            images[0][1] = new Image(new FileInputStream(getClass().getResource("/piecesImages/White/king.png").getFile()));
-            images[0][2] = new Image(new FileInputStream(getClass().getResource("/piecesImages/White/knight.png").getFile()));
-            images[0][3] = new Image(new FileInputStream(getClass().getResource("/piecesImages/White/pawn.png").getFile()));
-            images[0][4] = new Image(new FileInputStream(getClass().getResource("/piecesImages/White/queen.png").getFile()));
-            images[0][5] = new Image(new FileInputStream(getClass().getResource("/piecesImages/White/rook.png").getFile()));
+            images[0][0] = new Image(new FileInputStream(Objects.requireNonNull(getClass().getResource("/piecesImages/White/bishop.png")).getFile()));
+            images[0][1] = new Image(new FileInputStream(Objects.requireNonNull(getClass().getResource("/piecesImages/White/king.png")).getFile()));
+            images[0][2] = new Image(new FileInputStream(Objects.requireNonNull(getClass().getResource("/piecesImages/White/knight.png")).getFile()));
+            images[0][3] = new Image(new FileInputStream(Objects.requireNonNull(getClass().getResource("/piecesImages/White/pawn.png")).getFile()));
+            images[0][4] = new Image(new FileInputStream(Objects.requireNonNull(getClass().getResource("/piecesImages/White/queen.png")).getFile()));
+            images[0][5] = new Image(new FileInputStream(Objects.requireNonNull(getClass().getResource("/piecesImages/White/rook.png")).getFile()));
 
-            images[1][0] = new Image(new FileInputStream(getClass().getResource("/piecesImages/Black/bishop.png").getFile()));
-            images[1][1] = new Image(new FileInputStream(getClass().getResource("/piecesImages/Black/king.png").getFile()));
-            images[1][2] = new Image(new FileInputStream(getClass().getResource("/piecesImages/Black/knight.png").getFile()));
-            images[1][3] = new Image(new FileInputStream(getClass().getResource("/piecesImages/Black/pawn.png").getFile()));
-            images[1][4] = new Image(new FileInputStream(getClass().getResource("/piecesImages/Black/queen.png").getFile()));
-            images[1][5] = new Image(new FileInputStream(getClass().getResource("/piecesImages/Black/rook.png").getFile()));
+            images[1][0] = new Image(new FileInputStream(Objects.requireNonNull(getClass().getResource("/piecesImages/Black/bishop.png")).getFile()));
+            images[1][1] = new Image(new FileInputStream(Objects.requireNonNull(getClass().getResource("/piecesImages/Black/king.png")).getFile()));
+            images[1][2] = new Image(new FileInputStream(Objects.requireNonNull(getClass().getResource("/piecesImages/Black/knight.png")).getFile()));
+            images[1][3] = new Image(new FileInputStream(Objects.requireNonNull(getClass().getResource("/piecesImages/Black/pawn.png")).getFile()));
+            images[1][4] = new Image(new FileInputStream(Objects.requireNonNull(getClass().getResource("/piecesImages/Black/queen.png")).getFile()));
+            images[1][5] = new Image(new FileInputStream(Objects.requireNonNull(getClass().getResource("/piecesImages/Black/rook.png")).getFile()));
         } catch (Exception e) {
             System.out.println("Pieces Images not found!\n");
             e.printStackTrace();
@@ -106,7 +103,7 @@ public class BoardPane extends GridPane {
     }
 
     private void setChessMenuBar(){
-        chessMenuBar = new ChessMenuBar(view);
+        ChessMenuBar chessMenuBar = new ChessMenuBar(view);
         this.add(chessMenuBar,0,0,20,1);
     }
 
@@ -137,13 +134,7 @@ public class BoardPane extends GridPane {
         Button timerButton = new Button("Finish move!");
         timerButton.setMaxHeight(SQUARE_SIZE_PX);
         timerButton.setMaxWidth(SQUARE_SIZE_PX * 4);
-        timerButton.setOnMouseClicked(new EventHandler<MouseEvent>()
-          {
-              @Override
-              public void handle(MouseEvent e) {
-                ctrl.timerButtonAction();
-              }
-          });
+        timerButton.setOnMouseClicked(e -> ctrl.timerButtonAction());
         this.add(timerButton,11,4,14,4);
     }
 
@@ -163,38 +154,20 @@ public class BoardPane extends GridPane {
     }
 
     public void initTimersListeners(){
-        timer1Listener = new ChangeListener<Number>() {
-            @Override
-            public void changed(final ObservableValue<? extends Number> observable,
-                                final Number oldValue, final Number newValue) {
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            long value = (long) newValue;
-                            Date dateTime = new Date(value);
-                            String timeString = String.format("%02d",dateTime.getMinutes()) + ":" + String.format("%02d",dateTime.getSeconds());
-                            player1Timer.setText(timeString);
-                        }
-                    });
-                }
-        };
+        timer1Listener = (observable, oldValue, newValue) -> Platform.runLater(() -> {
+            long value = (long) newValue;
+            Date dateTime = new Date(value);
+            String timeString = String.format("%02d",dateTime.getMinutes()) + ":" + String.format("%02d",dateTime.getSeconds());
+            player1Timer.setText(timeString);
+        });
 
 
-        timer2Listener = new ChangeListener<Number>() {
-            @Override
-            public void changed(final ObservableValue<? extends Number> observable,
-                                final Number oldValue, final Number newValue) {
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            long value = (long) newValue;
-                            Date dateTime = new Date(value);
-                            String timeString = String.format("%02d",dateTime.getMinutes()) + ":" + String.format("%02d",dateTime.getSeconds());
-                            player2Timer.setText(timeString);
-                        }
-                    });
-                }
-        };
+        timer2Listener = (observable, oldValue, newValue) -> Platform.runLater(() -> {
+            long value = (long) newValue;
+            Date dateTime = new Date(value);
+            String timeString = String.format("%02d",dateTime.getMinutes()) + ":" + String.format("%02d",dateTime.getSeconds());
+            player2Timer.setText(timeString);
+        });
 
     }
 
@@ -213,17 +186,17 @@ public class BoardPane extends GridPane {
         for (int i = 0; i <= BOARD_SIZE+1; i++) {
             for (int j = 0; j <= BOARD_SIZE+1; j++) {
                 if(i == 0 || j == 0 || i == BOARD_SIZE+1 || j == BOARD_SIZE+1){
-                    char coorOnBoard = 0;
+                    char coordinateOnBoard = 0;
                     if(j == 0 && i != 0 && i != BOARD_SIZE+1 || j == BOARD_SIZE+1 && i != 0 && i != BOARD_SIZE+1){
-                        coorOnBoard = (char)('A' + (i-1) );
+                        coordinateOnBoard = (char)('A' + (i-1) );
                     }
                     else if(i == 0 && j != 0 && j != BOARD_SIZE+1 || i == BOARD_SIZE+1 && j != 0 && j != BOARD_SIZE+1){
-                        coorOnBoard = (char) ('9' - j);
+                        coordinateOnBoard = (char) ('9' - j);
                     }
 
                     Rectangle backgroundRectangle = new Rectangle(SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX);
                     backgroundRectangle.setFill(Color.WHITE);
-                    Text text = new Text(String.valueOf(coorOnBoard));
+                    Text text = new Text(String.valueOf(coordinateOnBoard));
                     text.setFont(Font.font(null, FontWeight.BOLD, 25));
 
                     this.add(backgroundRectangle, i, j+1);
@@ -239,25 +212,21 @@ public class BoardPane extends GridPane {
                 boardSquaresArray[shiftedI][shiftedJ] = new Rectangle(SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX);
                 Rectangle backgroundRectangle = boardSquaresArray[shiftedI][shiftedJ];
 
-                r.setId(String.valueOf(shiftedI) + String.valueOf(shiftedJ));
+                r.setId(shiftedI + String.valueOf(shiftedJ));
                 r.setFill(transparentColor);
-                r.setOnMouseClicked(new EventHandler<MouseEvent>()
-                {
-                    @Override
-                    public void handle(MouseEvent t) {
-                        int viewI = Integer.parseInt(r.getId()) / 10;
-                        int viewJ = Integer.parseInt(r.getId()) % 10;
+                r.setOnMouseClicked(t -> {
+                    int viewI = Integer.parseInt(r.getId()) / 10;
+                    int viewJ = Integer.parseInt(r.getId()) % 10;
 
-                        ArrayList boardCoordinates = transformView2Board(viewI,viewJ);
-                        int boardI = (int) boardCoordinates.get(0);
-                        int boardJ = (int) boardCoordinates.get(1);
+                    ArrayList boardCoordinates = transformView2Board(viewI,viewJ);
+                    int boardI = (int) boardCoordinates.get(0);
+                    int boardJ = (int) boardCoordinates.get(1);
 
-                        System.out.println("viewI: " + viewI + " " + "Y: " + viewJ);
-                        System.out.println("boardI: " + boardI + " " + "boardJ: " + boardJ);
+                    System.out.println("viewI: " + viewI + " " + "Y: " + viewJ);
+                    System.out.println("boardI: " + boardI + " " + "boardJ: " + boardJ);
 
-                        ctrl.boardSquareWasClicked(boardI,boardJ);
+                    ctrl.boardSquareWasClicked(boardI,boardJ);
 //                        view.boardSquareWasClicked(boardI,boardJ);
-                    }
                 });
                 if ((i+j) % 2 == 0) {
                     backgroundRectangle.setFill(evenSquareColor);
@@ -296,25 +265,25 @@ public class BoardPane extends GridPane {
     }
 
     private ArrayList transformBoard2View(int boardI, int boardJ){
-        ArrayList coord = new ArrayList();
-        coord.add(boardI);
-        coord.add((BOARD_SIZE-1) - boardJ);
-        return coord;
+        ArrayList coordinates = new ArrayList();
+        coordinates.add(boardI);
+        coordinates.add((BOARD_SIZE-1) - boardJ);
+        return coordinates;
     }
 
     private ArrayList transformView2Board(int viewI, int viewJ){
-        ArrayList coord = new ArrayList();
-        coord.add(viewI);
-        coord.add((BOARD_SIZE-1) - viewJ);
-        return coord;
+        ArrayList coordinates = new ArrayList();
+        coordinates.add(viewI);
+        coordinates.add((BOARD_SIZE-1) - viewJ);
+        return coordinates;
     }
 
     void changeBoardViewByList(ArrayList changesList){
         //{ {Color, PieceType, boardI, boardJ} ... }
-        for(int i = 0; i < changesList.size(); i++){
-            ArrayList squareToChange = (ArrayList) changesList.get(i);
-            ArrayList<Integer> coordinates = transformBoard2View((int)squareToChange.get(2),(int)squareToChange.get(3));
-            setImage((Color) squareToChange.get(0), (PieceType) squareToChange.get(1), coordinates.get(0),coordinates.get(1));
+        for (Object o : changesList) {
+            ArrayList squareToChange = (ArrayList) o;
+            ArrayList coordinates = transformBoard2View((int) squareToChange.get(2), (int) squareToChange.get(3));
+            setImage((Color) squareToChange.get(0), (PieceType) squareToChange.get(1), (Integer) coordinates.get(0), (Integer) coordinates.get(1));
         }
     }
 
