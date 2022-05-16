@@ -44,6 +44,7 @@ public class Controller {
 
         view.setBoardScene();
         setPlayersNameView();
+        view.initTimer();
     }
 
     public void exitAction(){

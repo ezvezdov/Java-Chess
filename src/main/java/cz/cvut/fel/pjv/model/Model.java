@@ -1,6 +1,5 @@
 package cz.cvut.fel.pjv.model;
 
-//import cz.cvut.fel.pjv.Controller;
 import cz.cvut.fel.pjv.model.players.ComputerPlayer;
 import cz.cvut.fel.pjv.model.players.Player;
 import cz.cvut.fel.pjv.model.utils.PGNSaver;
@@ -14,14 +13,9 @@ import java.util.Random;
 
 public class Model {
     protected final int BOARD_SIZE = 8;
-//    private Controller ctrl;
     private  View view;
     private Board board = null;
     private PGNSaver pgnSaver = new PGNSaver();
-
-
-
-    private boolean isGame = true;
 
     private Player currentPlayerMove;
     private Player player1, player2;
@@ -158,16 +152,10 @@ public class Model {
         // make move
         if(isSelectedPiece && board.isEmptySquare(boardI,boardJ) || isSelectedPiece && board.isOpponentPiece(boardI,boardJ,currentPlayerMove.getPlayerColor())){
             if(board.isValidMove(selectedPieceI,selectedPieceJ,boardI,boardJ) && !moveHasDone){
-                boolean isKingCaptured = board.isKing(boardI,boardJ);
+
                 makeMove(boardI,boardJ);
                 System.out.println("Move has done!");
 
-                if(isKingCaptured){
-                    stopTimers();
-                    view.gameOver(currentPlayerMove.getPlayerName());
-                }
-
-                moveHasDone = true;
 
             }
         }
@@ -188,7 +176,9 @@ public class Model {
         ArrayList move = player2.makeMove(BOARD_SIZE, board.getBoard());
         selectPiece((int) move.get(0), (int) move.get(1));
         makeMove((int) move.get(2), (int) move.get(3));
-        changeCurrentPlayerMove();
+        //changeCurrentPlayerMove();
+        nextMove();
+
     }
 
     public void nextMove(){
@@ -199,7 +189,7 @@ public class Model {
         else{
             return;
         }
-        if(isSinglePlayer()){
+        if(isSinglePlayer() && currentPlayerMove == player2){
             makeComputerMove();
         }
         unselectPiece();
@@ -211,11 +201,19 @@ public class Model {
     }
 
     private void makeMove(int boardI, int boardJ){
+        boolean isKingCaptured = board.isKing(boardI,boardJ);
+
         addMoveToPGN(selectedPieceI,selectedPieceJ,boardI,boardJ);
-        ArrayList changesList = board.makeMove(selectedPieceI,selectedPieceJ,boardI,boardJ);;
+        ArrayList changesList = board.makeMove(selectedPieceI,selectedPieceJ,boardI,boardJ);
+        moveHasDone = true;
 
         unselectPiece();
         view.changeBoardView(changesList);
+
+        if(isKingCaptured){
+            stopTimers();
+            view.gameOver(currentPlayerMove.getPlayerName());
+        }
 
     }
 
