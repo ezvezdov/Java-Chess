@@ -34,7 +34,7 @@ public class Square {
     }
 
     public boolean isOpponent(Color color){
-        return color != getPieceColor();
+        return !isEmpty() && color != getPieceColor();
     }
     public boolean isEmptyOrOpponent(Color color){
         if(isEmpty()){

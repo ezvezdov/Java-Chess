@@ -66,11 +66,7 @@ public class ChessMenuBar extends MenuBar {
 
 
 
-        // add menu items to menu
         gameMenu.getItems().addAll(continueGameMenuItem,newSingleplayerGame,saveGameMenuItem,saveGameAsPGN);
-//        gameMenu.getItems().add();
-//        gameMenu.getItems().add();
-//        gameMenu.getItems().add();
 
         exitMenu.getItems().addAll(saveAndExit,exitWithoutSaving);
 

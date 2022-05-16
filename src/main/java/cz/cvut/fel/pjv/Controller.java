@@ -15,6 +15,7 @@ public class Controller {
         model = new Model();
 
         view.setController(this);
+        view.setModel(model);
         model.setView(view);
         GUIStart();
     }
@@ -34,6 +35,7 @@ public class Controller {
 
         view.setBoardScene();
         setPlayersNameView();
+        view.initTimer();
     }
 
     public void newSingleplayerGameAction(){

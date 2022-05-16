@@ -1,6 +1,11 @@
 package cz.cvut.fel.pjv.view;
 
+import cz.cvut.fel.pjv.Controller;
+import cz.cvut.fel.pjv.model.Model;
 import cz.cvut.fel.pjv.model.pieces.PieceType;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -18,11 +23,16 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
+
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class BoardPane extends GridPane {
     private View view;
+    private Model model;
+    private Controller ctrl;
     private int BOARD_SIZE;
     private int SQUARE_SIZE_PX;
     private Rectangle[][] piecesArray;
@@ -31,16 +41,19 @@ public class BoardPane extends GridPane {
 
     private ChessMenuBar chessMenuBar = null;
 
-    Label player1Name = new Label(), player2Name = new Label();
+    private Label player1Name = new Label(), player2Name = new Label();
 
+    Label player1Timer = new Label("00:00"), player2Timer = new Label("00:00");
 
     private Color selectedSquareColor = Color.GOLD;
     private Color evenSquareColor = Color.BEIGE;
     private Color oddSquareColor = Color.SADDLEBROWN;
     private Color transparentColor = Color.TRANSPARENT;
 
-    BoardPane(View view, int BOARD_SIZE, int SQUARE_SIZE_PX) {
+    BoardPane(View view, Controller ctrl, Model model, int BOARD_SIZE, int SQUARE_SIZE_PX) {
         this.view = view;
+        this.ctrl = ctrl;
+        this.model = model;
 
         this.BOARD_SIZE = BOARD_SIZE;
         this.SQUARE_SIZE_PX = SQUARE_SIZE_PX;
@@ -60,7 +73,10 @@ public class BoardPane extends GridPane {
 
         initPlayerNameLabels();
 
+        initTimersLabels();
     }
+
+
 
     private void loadImages(){
         images = new Image[2][6];
@@ -122,11 +138,75 @@ public class BoardPane extends GridPane {
           {
               @Override
               public void handle(MouseEvent e) {
-                view.timerButtonAction();
+                ctrl.timerButtonAction();
               }
           });
         this.add(timerButton,11,4,14,4);
     }
+
+    public void initTimersLabels(){
+        player1Timer = new Label("00:00");
+        player1Timer.setMaxWidth(4 * SQUARE_SIZE_PX);
+        player1Timer.setMaxHeight(SQUARE_SIZE_PX);
+        player1Timer.setAlignment(Pos.CENTER);
+        player1Timer.setFont(Font.font(null, FontWeight.BOLD, 25));
+        player1Timer.setTextAlignment(TextAlignment.CENTER);
+        this.add(player1Timer,11,5,14,5);
+        GridPane.setHalignment(player1Timer, HPos.CENTER);
+
+        player2Timer = new Label("00:00");
+        player2Timer.setFont(player1Timer.getFont());
+        this.add(player2Timer,11,3,14,3);
+        GridPane.setHalignment(player2Timer, HPos.CENTER);
+
+    }
+
+
+    public void setTimers(){
+        player1Timer.setText("00:00");
+        player2Timer.setText("00:00");
+
+        final AtomicLong count1 = new AtomicLong(-1);
+        model.getPlayer1Timestamp().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(final ObservableValue<? extends Number> observable,
+                                final Number oldValue, final Number newValue) {
+                if (count1.getAndSet(newValue.intValue()) == -1) {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            long value = count1.getAndSet(-1);
+                            Date dateTime = new Date(value);
+                            String timeString = String.format("%02d",dateTime.getMinutes()) + ":" + String.format("%02d",dateTime.getSeconds());
+                            player1Timer.setText(timeString);
+                        }
+                    });
+                }
+            }
+        });
+
+        final AtomicLong count2 = new AtomicLong(-1);
+        model.getPlayer2Timestamp().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(final ObservableValue<? extends Number> observable,
+                                final Number oldValue, final Number newValue) {
+                if (count2.getAndSet(newValue.intValue()) == -1) {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            long value = count2.getAndSet(-1);
+                            Date dateTime = new Date(value);
+                            String timeString = String.format("%02d",dateTime.getMinutes()) + ":" + String.format("%02d",dateTime.getSeconds());
+                            player2Timer.setText(timeString);
+                        }
+                    });
+                }
+            }
+        });
+
+
+    }
+
 
     private void generateSquares() {
         for (int i = 0; i <= BOARD_SIZE+1; i++) {
@@ -174,7 +254,8 @@ public class BoardPane extends GridPane {
                         System.out.println("viewI: " + viewI + " " + "Y: " + viewJ);
                         System.out.println("boardI: " + boardI + " " + "boardJ: " + boardJ);
 
-                        view.boardSquareWasClicked(boardI,boardJ);
+                        ctrl.boardSquareWasClicked(boardI,boardJ);
+//                        view.boardSquareWasClicked(boardI,boardJ);
                     }
                 });
                 if ((i+j) % 2 == 0) {

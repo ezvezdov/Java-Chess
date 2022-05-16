@@ -56,6 +56,9 @@ public class Board {
         return board[boardI][boardJ].isKing();
     }
 
+    public boolean isEmptySquare(int boardI, int boardJ){
+        return board[boardI][boardJ].isEmpty();
+    }
 
     /**
      * Get data about whole board.
@@ -70,6 +73,9 @@ public class Board {
             }
         }
         return boardArrayList;
+    }
+    public boolean isOpponentPiece(int boardI, int boardJ, Color currentPlayerColor){
+        return board[boardI][boardJ].isOpponent(currentPlayerColor);
     }
 
     public Square[][] getBoard() {

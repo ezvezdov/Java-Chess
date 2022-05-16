@@ -1,10 +1,10 @@
 package cz.cvut.fel.pjv.model;
 
 //import cz.cvut.fel.pjv.Controller;
-import cz.cvut.fel.pjv.model.pieces.PieceType;
 import cz.cvut.fel.pjv.model.players.ComputerPlayer;
 import cz.cvut.fel.pjv.model.players.Player;
 import cz.cvut.fel.pjv.model.utils.PGNSaver;
+import javafx.beans.property.LongProperty;
 import javafx.scene.paint.Color;
 
 import cz.cvut.fel.pjv.view.View;
@@ -42,15 +42,6 @@ public class Model {
     GameType getGameType(){
         return gameType;
     }
-
-    public void setPlayer(Player player) {
-        if(this.player1 != null){
-            this.player2 = player;
-            return;
-        }
-        this.player1 = player;
-    }
-
 
     public Player getPlayer1() {
         return player1;
@@ -100,16 +91,45 @@ public class Model {
         this.player2 = player2;
     }
 
+    public LongProperty getPlayer1Timestamp(){
+        return player1.getTimestamp();
+    }
+
+    public LongProperty getPlayer2Timestamp(){
+        return player2.getTimestamp();
+    }
+
 
     public void initComputerPlayer(){
         player2 = new ComputerPlayer(Color.BLACK);
     }
 
+    private void initTimers(){
+        player1.setPlayerTimer(new ChessTimer(view));
+        player2.setPlayerTimer(new ChessTimer(view));
+        player1.initTimer();
+        player2.initTimer();
+        if(player1.getPlayerColor() == Color.WHITE){
+            player1.startTimer();
+        }
+        else{
+            player2.startTimer();
+        }
+    }
+
+    private void stopTimers(){
+        player1.stopTimer();
+        player2.stopTimer();
+    }
+
 
     public void startGame(GameType gameType){
         this.gameType = gameType;
+        moveHasDone = false;
         resetBoard();
+        initTimers();
         view.changeBoardView(getBoardAsArrayList());
+
     }
     public void continueGame(){
         player1 = new Player("player1Name",Color.WHITE);
@@ -135,15 +155,15 @@ public class Model {
 
     public void squareWasClicked(int boardI, int boardJ){
 
-        System.out.println(isCurrentPlayersPiece(boardI,boardJ));
-
         // make move
-        if(isSelectedPiece && isEmptySquare(boardI,boardJ) || isSelectedPiece && !isCurrentPlayersPiece(boardI,boardJ)){
+        if(isSelectedPiece && board.isEmptySquare(boardI,boardJ) || isSelectedPiece && board.isOpponentPiece(boardI,boardJ,currentPlayerMove.getPlayerColor())){
             if(board.isValidMove(selectedPieceI,selectedPieceJ,boardI,boardJ) && !moveHasDone){
                 boolean isKingCaptured = board.isKing(boardI,boardJ);
                 makeMove(boardI,boardJ);
+                System.out.println("Move has done!");
 
                 if(isKingCaptured){
+                    stopTimers();
                     view.gameOver(currentPlayerMove.getPlayerName());
                 }
 
@@ -152,11 +172,11 @@ public class Model {
             }
         }
         //select piece
-        else if(!isSelectedPiece && !isEmptySquare(boardI,boardJ) && isCurrentPlayersPiece(boardI,boardJ) && !moveHasDone){
+        else if(!isSelectedPiece && !board.isEmptySquare(boardI,boardJ) && !board.isOpponentPiece(boardI,boardJ,currentPlayerMove.getPlayerColor()) && !moveHasDone){
             selectPiece(boardI, boardJ);
         }
         //reselect piece
-        else if(isSelectedPiece && !isEmptySquare(boardI,boardJ) && isCurrentPlayersPiece(boardI, boardJ)){
+        else if(isSelectedPiece && !board.isEmptySquare(boardI,boardJ) && !board.isOpponentPiece(boardI, boardJ,currentPlayerMove.getPlayerColor())){
             unselectPiece();
             selectPiece(boardI, boardJ);
         }
@@ -185,7 +205,9 @@ public class Model {
         unselectPiece();
     }
     private  void changeCurrentPlayerMove(){
+        currentPlayerMove.stopTimer();
         currentPlayerMove = currentPlayerMove == player1 ? player2 : player1;
+        currentPlayerMove.startTimer();
     }
 
     private void makeMove(int boardI, int boardJ){
@@ -194,7 +216,6 @@ public class Model {
 
         unselectPiece();
         view.changeBoardView(changesList);
-//        ctrl.updateBoard(changesList);
 
     }
 
@@ -204,7 +225,6 @@ public class Model {
         selectedPieceI = boardI;
         selectedPieceJ = boardJ;
         view.selectPiece(boardI,boardJ);
-        System.out.println("Move has done!");
     }
 
     private void unselectPiece(){
@@ -215,19 +235,6 @@ public class Model {
             selectedPieceI = -1;
             selectedPieceJ = -1;
         }
-    }
-
-    private boolean isCurrentPlayersPiece(int boardI, int indexJ){
-        ArrayList list = board.getSquareStatus(boardI,indexJ);
-        Color pieceColor = (Color) list.get(0);
-        PieceType pieceType = (PieceType) list.get(1);
-        return pieceColor == currentPlayerMove.getPlayerColor() && pieceType != PieceType.EMPTY;
-    }
-
-    private boolean isEmptySquare(int boardI, int boardJ){
-        ArrayList list = board.getSquareStatus(boardI,boardJ);
-        PieceType pieceType = (PieceType) list.get(1);
-        return pieceType == PieceType.EMPTY;
     }
 
     public ArrayList getBoardAsArrayList(){

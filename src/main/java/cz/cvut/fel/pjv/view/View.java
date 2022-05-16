@@ -1,6 +1,7 @@
 package cz.cvut.fel.pjv.view;
 
 import cz.cvut.fel.pjv.Controller;
+import cz.cvut.fel.pjv.model.Model;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -28,11 +29,15 @@ public class View extends Application {
     private static Scene menuScene = null;
     private static Scene boardScene = null;
     private static Controller ctrl = null;
+    private static Model model = null;
     private static BoardPane boardPane = null;
 
 
     public void setController(Controller ctrl){
         this.ctrl = ctrl;
+    }
+    public void setModel(Model model){
+        this.model = model;
     }
 
     @Override
@@ -60,7 +65,7 @@ public class View extends Application {
 
     private void initBoardScene(){
 //        initMenuBar();
-        boardPane = new BoardPane(this,BOARD_SIZE,SQUARE_SIZE_PX);
+        boardPane = new BoardPane(this,ctrl,model,BOARD_SIZE,SQUARE_SIZE_PX);
         boardScene = new Scene(boardPane,windowSizeX,windowSizeY);
     }
     public void setMenuScene(){
@@ -100,6 +105,15 @@ public class View extends Application {
     }
     public void selectPiece(int boardI, int boardJ){
         boardPane.paintSelected(boardI,boardJ);
+    }
+
+//    public void setTimer(int mins, int secs){
+//        boardPane.setTimer(mins,secs);
+//
+//    }
+
+    public void initTimer(){
+        boardPane.setTimers();
     }
 
     public String getPlayerName(){
