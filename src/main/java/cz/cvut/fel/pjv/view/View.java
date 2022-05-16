@@ -34,25 +34,24 @@ public class View extends Application {
 
 
     public void setController(Controller ctrl){
-        this.ctrl = ctrl;
+        View.ctrl = ctrl;
     }
     public void setModel(Model model){
-        this.model = model;
+        View.model = model;
     }
 
     @Override
     public void start(Stage stage) {
-        this.stage = stage;
+        View.stage = stage;
         GUIinit();
         setMenuScene();
         stage.setTitle("JavaFX Chess");
-        stage.setResizable(false);
+//        stage.setResizable(false);
         stage.show();
     }
     private void GUIinit(){
         initMenuScene();
         initBoardScene();
-//        initTimer();
     }
 
     private void initMenuScene(){
@@ -65,7 +64,6 @@ public class View extends Application {
     }
 
     private void initBoardScene(){
-//        initMenuBar();
         boardPane = new BoardPane(this,ctrl,model,BOARD_SIZE,SQUARE_SIZE_PX);
         boardScene = new Scene(boardPane,windowSizeX,windowSizeY);
     }
@@ -76,41 +74,12 @@ public class View extends Application {
         stage.setScene(boardScene);
     }
 
-     public void exitButtonAction(){
-        ctrl.exitAction();
-    }
-    public void saveAndExitAction(){
-        ctrl.saveAndExitAction();
-    }
-     public void boardSquareWasClicked(int boardI, int boardJ){
-        ctrl.boardSquareWasClicked(boardI,boardJ);
-    }
-     public void saveGameAction(){ctrl.saveGameAction();}
-     public void continueGameAction(){ctrl.continueGameAction();}
-     public void newSingleplayerGameAction(){
-        ctrl.newSingleplayerGameAction();
-    }
-     public void newMultiplayerGameAction(){
-        ctrl.newMultiplayerGameAction();
-    }
-     public void saveGameAsPGNAction(){
-        ctrl.saveGamePGNAction();
-    }
-     public void timerButtonAction(){
-        ctrl.timerButtonAction();
-    }
-
 
     public void changeBoardView(ArrayList list){
         boardPane.changeBoardViewByList(list);
     }
     public void selectPiece(int boardI, int boardJ){
         boardPane.paintSelected(boardI,boardJ);
-    }
-
-
-    public void initTimer(){
-        boardPane.setTimers();
     }
 
     public String getPlayerName(){
@@ -132,7 +101,7 @@ public class View extends Application {
     }
 
     public void gameOver(String winnerName){
-        Dialog dialog = new Dialog<>();
+        Dialog<Object> dialog = new Dialog<>();
         dialog.initStyle(StageStyle.UTILITY);
         dialog.setTitle("Game over!");
         dialog.setHeaderText(winnerName + " win!");
@@ -143,16 +112,16 @@ public class View extends Application {
         ButtonType ExitButton  = new ButtonType("Exit");
 
         dialog.getDialogPane().getButtonTypes().addAll(newGameButton,SavePGNButton,ExitButton);
-        Optional<ButtonType> result = dialog.showAndWait();
+        Optional<Object> result = dialog.showAndWait();
         if(result.get() == newGameButton){
             setMenuScene();
         }
         if(result.get() == SavePGNButton){
-            saveGameAsPGNAction();
+            ctrl.saveGamePGNAction();
             setMenuScene();
         }
         if(result.get() == ExitButton){
-            exitButtonAction();
+            ctrl.exitAction();
         }
 
     }

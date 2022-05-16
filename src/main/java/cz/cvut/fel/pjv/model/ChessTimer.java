@@ -6,8 +6,6 @@ import javafx.beans.property.SimpleLongProperty;
 
 import java.util.Date;
 
-import static java.lang.Thread.sleep;
-
 public class ChessTimer extends Thread{
 
 
@@ -20,7 +18,7 @@ public class ChessTimer extends Thread{
     boolean isWorking = false;
 
     View view;
-    private LongProperty longProperty;
+    private final LongProperty longProperty;
 
     ChessTimer(View view){
         this.view = view;

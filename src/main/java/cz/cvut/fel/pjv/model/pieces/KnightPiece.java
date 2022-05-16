@@ -6,13 +6,13 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 
 public class KnightPiece extends Piece{
-    public KnightPiece(Color pieceColor, int boardI, int boardJ) {
-        super(pieceColor, boardI, boardJ);
+    public KnightPiece(Color pieceColor) {
+        super(pieceColor);
     }
 
     @Override
     public ArrayList makeAvailableMovesList(Square[][] board, int fromI, int fromJ) {
-        ArrayList availableMovesList = new ArrayList();
+        ArrayList<ArrayList> availableMovesList = new ArrayList<>();
         if(fromI - 2 >= 0 && fromJ + 1 < BOARD_SIZE && board[fromI-2][fromJ+1].isEmptyOrOpponent(pieceColor)){
             availableMovesList.add(makePair(fromI-2,fromJ+1));
         }

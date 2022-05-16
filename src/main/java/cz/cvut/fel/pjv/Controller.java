@@ -36,7 +36,6 @@ public class Controller {
 
         view.setBoardScene();
         setPlayersNameView();
-        view.initTimer();
     }
 
     public void newSingleplayerGameAction(){
@@ -45,7 +44,6 @@ public class Controller {
 
         view.setBoardScene();
         setPlayersNameView();
-        view.initTimer();
     }
 
     public void exitAction(){
@@ -63,11 +61,12 @@ public class Controller {
     }
     public void saveGameAction(){model.saveGame();}
     public void continueGameAction(){
+        view = new View();
+
         model.setPlayers("player1Name","player2Name");
         model.startGame(GameType.MULTIPLAYER);
 
         view.setBoardScene();
-        view.initTimer();
 
         model.continueGame();
         setPlayersNameView();
@@ -80,7 +79,11 @@ public class Controller {
         model.nextMove();
     }
 
-    public void GoToMenuAction(){
+    public void goToMenu(){
+        view.setMenuScene();
+    }
+    public void saveAndGoToMenu(){
+        model.saveGame();
         view.setMenuScene();
     }
 }

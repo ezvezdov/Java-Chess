@@ -103,7 +103,7 @@ public class BoardPane extends GridPane {
     }
 
     private void setChessMenuBar(){
-        ChessMenuBar chessMenuBar = new ChessMenuBar(view);
+        ChessMenuBar chessMenuBar = new ChessMenuBar(ctrl);
         this.add(chessMenuBar,0,0,20,1);
     }
 
@@ -169,16 +169,8 @@ public class BoardPane extends GridPane {
             player2Timer.setText(timeString);
         });
 
-    }
-
-
-    public void setTimers(){
-        if(!isTimersSet){
-            model.getPlayer1Timestamp().addListener(timer1Listener);
-            model.getPlayer2Timestamp().addListener(timer2Listener);
-            isTimersSet = true;
-        }
-
+        model.getPlayer1Timestamp().addListener(timer1Listener);
+        model.getPlayer2Timestamp().addListener(timer2Listener);
     }
 
 

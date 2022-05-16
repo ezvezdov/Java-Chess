@@ -30,8 +30,8 @@ public class BoardWriter extends FilesIO{
     public void setData(ArrayList boardData, Color currentMove, GameType gameType, Player player1, Player player2){
         setPrintStream(filePath);
 
-        for(int i = 0; i < boardData.size(); i++){
-            ArrayList currentPieceData = (ArrayList) boardData.get(i);
+        for (Object boardDatum : boardData) {
+            ArrayList currentPieceData = (ArrayList) boardDatum;
             printPiece(currentPieceData);
         }
 

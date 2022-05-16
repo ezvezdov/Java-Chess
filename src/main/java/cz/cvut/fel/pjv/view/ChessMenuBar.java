@@ -1,17 +1,17 @@
 package cz.cvut.fel.pjv.view;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import cz.cvut.fel.pjv.Controller;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 
 public class ChessMenuBar extends MenuBar {
-    private View view;
+    private final Controller ctrl;
 
-     ChessMenuBar(View view){
-        this.view = view;
+     ChessMenuBar(Controller ctrl){
+         this.ctrl = ctrl;
         initMenuBar();
+
     }
 
     private void initMenuBar(){
@@ -19,64 +19,27 @@ public class ChessMenuBar extends MenuBar {
         Menu exitMenu = new Menu("Exit");
 
         MenuItem continueGameMenuItem = new MenuItem("Continue game");
-        continueGameMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
-                view.continueGameAction();
-            }
-        });
+        continueGameMenuItem.setOnAction(e -> ctrl.continueGameAction());
         MenuItem newSingleplayerGame = new MenuItem("New Singleplayer game");
-        newSingleplayerGame.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
-                view.newSingleplayerGameAction();
-            }
-        });
+        newSingleplayerGame.setOnAction(e -> ctrl.newSingleplayerGameAction());
         MenuItem newMultiplayerGame = new MenuItem("New Multiplayer game");
-        newMultiplayerGame.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
-                view.newMultiplayerGameAction();
-            }
-        });
+        newMultiplayerGame.setOnAction(e -> ctrl.newMultiplayerGameAction());
         MenuItem saveGameMenuItem = new MenuItem("Save game");
-        saveGameMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
-                view.saveGameAction();
-            }
-        });
+        saveGameMenuItem.setOnAction(e -> ctrl.saveGameAction());
         MenuItem saveGameAsPGN = new MenuItem("Save game as PGN");
-        saveGameAsPGN.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
-                view.saveGameAsPGNAction();
-            }
-        });
+        saveGameAsPGN.setOnAction(e -> ctrl.saveGamePGNAction());
 
         MenuItem saveAndGoToMenu = new MenuItem("Save and go to menu");
-        saveAndGoToMenu.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
-                view.saveGameAction();
-                view.setMenuScene();
-            }
-        });
+        saveAndGoToMenu.setOnAction(e -> ctrl.saveAndGoToMenu());
         MenuItem goToMenuWithoutSaving = new MenuItem("Go to menu without saving");
-        goToMenuWithoutSaving.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
-                view.setMenuScene();
-            }
-        });
+        goToMenuWithoutSaving.setOnAction(e -> ctrl.goToMenu());
 
 
         MenuItem exitWithoutSaving = new MenuItem("Exit without saving");
-        exitWithoutSaving.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
-                view.exitButtonAction();
-            }
-        });
+        exitWithoutSaving.setOnAction(e -> ctrl.exitAction());
 
         MenuItem saveAndExit = new MenuItem("Save and exit");
-        saveAndExit.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
-                view.saveAndExitAction();
-            }
-        });
+        saveAndExit.setOnAction(e -> ctrl.saveAndExitAction());
 
 
 

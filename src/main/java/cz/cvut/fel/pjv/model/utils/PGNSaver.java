@@ -29,14 +29,13 @@ public class PGNSaver extends FilesIO{
         PieceType fromPieceType = (PieceType) from.get(1);
         PieceType toPieceType = (PieceType) to.get(1);
 
+        int fromI = (int) from.get(2);
+        int fromJ = (int) from.get(3);
         int toI = (int) to.get(2);
         int toJ = (int) to.get(3);
-        boolean isCapture = false;
-        if(toPieceType != PieceType.EMPTY){
-            isCapture = true;
-        }
+        boolean isCapture = toPieceType != PieceType.EMPTY;
 
-        saveMoveAsString(fromPieceType,toI,toJ,isCapture);
+        saveMoveAsString(fromPieceType,fromI,fromJ,toI,toJ,isCapture);
     }
 
 
@@ -44,16 +43,17 @@ public class PGNSaver extends FilesIO{
      * Save move as String to ArrayList moves
      *
      * @param pieceType type of moved piece
-     * @param coordinateI coordinate boardI to which piece was moved
-     * @param coordinateJ coordinate boardJ to which piece was moved
+     * @param toI coordinate boardI to which piece was moved
+     * @param toJ coordinate boardJ to which piece was moved
      * @param isCapture is piece capture another piece
      */
-    private void saveMoveAsString(PieceType pieceType, int coordinateI, int coordinateJ, boolean isCapture){
+    private void saveMoveAsString(PieceType pieceType, int fromI, int fromJ, int toI, int toJ, boolean isCapture){
         //String data to print
         String pieceTypeString = "B";
-        char coordinateIChar = (char) ('a' + coordinateI);
-        String captureString = "";//isCapture ? "x" : "";
-        coordinateJ++; //Coordinate starts from 1
+        char toIChar = (char) ('a' + toI);
+        char fromIChar = (char) ('a' + fromI);
+        toJ++; //Coordinate starts from 1
+        fromJ++;
 
         switch (pieceType){
             case BISHOP:
@@ -79,7 +79,13 @@ public class PGNSaver extends FilesIO{
                 pieceTypeString = "R";
                 break;
         }
-        moves.add(pieceTypeString + captureString + coordinateIChar + coordinateJ);
+        if(!isCapture){
+            moves.add(pieceTypeString + toIChar + toJ);
+        }
+        else{
+            moves.add(fromIChar + "x" + pieceTypeString + toIChar + toJ);
+        }
+
     }
 
 
@@ -118,8 +124,7 @@ public class PGNSaver extends FilesIO{
 
     private String generatePGNFileName(){
         String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HHmmss").format(Calendar.getInstance().getTime());
-        String absoluteFilePath = System.getProperty("user.dir") + PGN_DIRECTORY_PATH + timeStamp + ".pgn";
-        return absoluteFilePath;
+        return System.getProperty("user.dir") + PGN_DIRECTORY_PATH + timeStamp + ".pgn";
     }
 
     public void savePGN(Player player1, Player player2){

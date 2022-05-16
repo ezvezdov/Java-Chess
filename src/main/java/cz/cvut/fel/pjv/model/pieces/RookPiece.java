@@ -7,12 +7,12 @@ import java.util.ArrayList;
 
 public class RookPiece extends Piece{
     public RookPiece(Color pieceColor, int boardI, int boardJ) {
-        super(pieceColor, boardI, boardJ);
+        super(pieceColor);
     }
 
     @Override
     public ArrayList makeAvailableMovesList(Square[][] board, int fromI, int fromJ) {
-        ArrayList availableMovesList = new ArrayList();
+        ArrayList<ArrayList> availableMovesList = new ArrayList<>();
         for(int i = fromI+1; i < BOARD_SIZE; i++){
             if(!board[i][fromJ].isEmpty()){
                 //add opponent piece to available moves

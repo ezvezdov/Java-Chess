@@ -17,7 +17,7 @@ public class Model {
     private final PGNSaver pgnSaver = new PGNSaver();
 
     private Player currentPlayerMove;
-    private Player player1 = new Player("player1", Color.WHITE);
+    private final Player player1 = new Player("player1", Color.WHITE);
     private Player player2 = new Player("player2", Color.BLACK);
 
     private boolean isSelectedPiece = false;
@@ -198,7 +198,6 @@ public class Model {
         ArrayList move = player2.makeMove(BOARD_SIZE, board.getBoard());
         selectPiece((int) move.get(0), (int) move.get(1));
         makeMove((int) move.get(2), (int) move.get(3));
-        //changeCurrentPlayerMove();
         nextMove();
 
     }

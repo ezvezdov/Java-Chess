@@ -9,14 +9,14 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 
 public class Board {
-    private String START_BOARD_FILE = "/boardData/startBoard.txt";
-    private String SAVED_BOARD_FILE = "/boardData/savedBoard.txt";
+    private final String START_BOARD_FILE = "/boardData/startBoard.txt";
+    private final String SAVED_BOARD_FILE = "/boardData/savedBoard.txt";
     private final int BOARD_SIZE = 8;
 
-    private Model model;
-    private Square[][] board;
+    private final Model model;
+    private final Square[][] board;
     private BoardReader br;
-    private BoardWriter bw;
+    private final BoardWriter bw;
 
     public Board(Model model) {
         this.model = model;

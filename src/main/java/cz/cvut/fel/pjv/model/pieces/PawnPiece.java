@@ -10,7 +10,7 @@ public class PawnPiece extends Piece{
     int startBoardI, startBoardJ;
 
     public PawnPiece(Color pieceColor, int boardI, int boardJ) {
-        super(pieceColor, boardI, boardJ);
+        super(pieceColor);
         this.startBoardI = boardI;
         this.startBoardJ = boardJ;
 
@@ -28,7 +28,7 @@ public class PawnPiece extends Piece{
             isStartPosition = false;
         }
 
-        ArrayList availableMovesList = new ArrayList();
+        ArrayList<ArrayList> availableMovesList = new ArrayList<>();
         if(isLeftSide) {
 
             if (fromJ + 1 < BOARD_SIZE && board[fromI][fromJ + 1].isEmpty()) {

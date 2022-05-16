@@ -13,7 +13,7 @@ public abstract class Piece {
      boolean isMoved = false;
      boolean isTwoSquareMove = false;
 
-    Piece(Color pieceColor, int boardI, int boardJ){
+    Piece(Color pieceColor){
         this.pieceColor = pieceColor;
     }
 
@@ -39,8 +39,8 @@ public abstract class Piece {
         return isLeftSide;
     }
 
-    ArrayList makePair(int boardI, int boardJ){
-        ArrayList list = new ArrayList();
+    ArrayList<Integer> makePair(int boardI, int boardJ){
+        ArrayList<Integer> list = new ArrayList<Integer>();
         list.add(boardI);
         list.add(boardJ);
         return list;
@@ -49,10 +49,10 @@ public abstract class Piece {
     public boolean isValidMove(Square[][] board, int fromI, int fromJ, int toI, int toJ){
         ArrayList availableMovesList = makeAvailableMovesList(board,fromI,fromJ);
         System.out.println(availableMovesList);
-        for(int i = 0; i < availableMovesList.size(); i++){
-            int indexI = (int)((ArrayList)availableMovesList.get(i)).get(0);
-            int indexJ = (int)((ArrayList)availableMovesList.get(i)).get(1);
-            if(toI == indexI && toJ == indexJ){
+        for (Object o : availableMovesList) {
+            int indexI = (int) ((ArrayList<?>) o).get(0);
+            int indexJ = (int) ((ArrayList<?>) o).get(1);
+            if (toI == indexI && toJ == indexJ) {
                 return true;
             }
         }

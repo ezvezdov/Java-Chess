@@ -6,8 +6,8 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 
 public class Square {
-    private int boardI;
-    private int boardJ;
+    private final int boardI;
+    private final int boardJ;
     private Piece piece = null;
     private PieceType pieceType = null;
     private Color pieceColor = null;
@@ -69,10 +69,6 @@ public class Square {
         piece.setTwoSquareMove();
     }
 
-    public boolean getLeftSide(){
-        return piece.getLeftSide();
-    }
-
     void setPieceFromSquare(Square sq){
         pieceColor = sq.pieceColor;
         pieceType = sq.pieceType;
@@ -92,13 +88,13 @@ public class Square {
     private void initPiece(){
         switch (pieceType){
             case BISHOP:
-                piece = new BishopPiece(pieceColor,boardI,boardJ);
+                piece = new BishopPiece(pieceColor);
                 break;
             case KING:
-                piece = new KingPiece(pieceColor,boardI,boardJ);
+                piece = new KingPiece(pieceColor);
                 break;
             case KNIGHT:
-                piece = new KnightPiece(pieceColor,boardI,boardJ);
+                piece = new KnightPiece(pieceColor);
                 break;
             case PAWN:
                 piece = new PawnPiece(pieceColor,boardI,boardJ);

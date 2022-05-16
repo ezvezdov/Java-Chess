@@ -6,12 +6,11 @@ import cz.cvut.fel.pjv.model.pieces.PieceType;
 import cz.cvut.fel.pjv.model.players.Player;
 import javafx.scene.paint.Color;
 
-import java.text.CollationKey;
 import java.util.ArrayList;
 
 public class BoardReader extends FilesIO{
 
-    private Board board;
+    private final Board board;
     private String filePath;
 
     public BoardReader(Board board){
@@ -36,8 +35,8 @@ public class BoardReader extends FilesIO{
     public void setData(){
         setScanner(filePath);
 
-        ArrayList<String> playersData = new ArrayList<String>();
-        ArrayList<String> timersData = new ArrayList<String>();
+        ArrayList<String> playersData = new ArrayList<>();
+        ArrayList<String> timersData = new ArrayList<>();
 
         while (scanner.hasNext()){
             String line = scanner.nextLine();
@@ -48,25 +47,19 @@ public class BoardReader extends FilesIO{
             }
 
             String[] rowPiecesData = line.split(" ");
-            for(int i = 0; i < rowPiecesData.length; i++){
+            for (String curPieceData : rowPiecesData) {
 
-                String curPieceData = rowPiecesData[i];
-                if(curPieceData.length() >= 1 && curPieceData.charAt(0) == '#'){
+                if (curPieceData.length() >= 1 && curPieceData.charAt(0) == '#') {
                     break;
-                }
-                else if(curPieceData.length() >= 2 && curPieceData.charAt(0) == '@' ){
+                } else if (curPieceData.length() >= 2 && curPieceData.charAt(0) == '@') {
                     setCurrentMoveColor(curPieceData.charAt(1));
-                }
-                else if(curPieceData.length() >= 2 && curPieceData.charAt(0) == '$' ){
+                } else if (curPieceData.length() >= 2 && curPieceData.charAt(0) == '$') {
                     setGameType(curPieceData.charAt(1));
-                }
-                else if(curPieceData.length() >= 4 && curPieceData.charAt(0) == '%' ){
+                } else if (curPieceData.length() >= 4 && curPieceData.charAt(0) == '%') {
                     playersData.add(curPieceData);
-                }
-                else if(curPieceData.length() >= 4 && curPieceData.charAt(0) == '&' ){
+                } else if (curPieceData.length() >= 4 && curPieceData.charAt(0) == '&') {
                     timersData.add(curPieceData);
-                }
-                else if(curPieceData.length() == 4){
+                } else if (curPieceData.length() == 4) {
                     setPiece(curPieceData);
                 }
             }
@@ -156,7 +149,7 @@ public class BoardReader extends FilesIO{
     /**
      * Set isSinglePlayer variable
      *
-     * @param isSinglePlayer
+     * @param isSinglePlayer is game singleplayer
      */
     private void setGameType(char isSinglePlayer){
         if(isSinglePlayer == 's'){

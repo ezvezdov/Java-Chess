@@ -7,13 +7,13 @@ import java.util.ArrayList;
 
 public class KingPiece extends Piece{
 
-    public KingPiece(Color pieceColor, int boardI, int boardJ) {
-        super(pieceColor, boardI, boardJ);
+    public KingPiece(Color pieceColor) {
+        super(pieceColor);
     }
 
     @Override
     public ArrayList makeAvailableMovesList(Square[][] board, int fromI, int fromJ) {
-        ArrayList availableMoves = new ArrayList();
+        ArrayList<ArrayList> availableMoves = new ArrayList<>();
         if(fromI + 1 < BOARD_SIZE && board[fromI+1][fromJ].isEmpty()){
             if(!isUnderAttack(board,fromI+1, fromJ)){
                 availableMoves.add(makePair(fromI+1, fromJ));
@@ -74,9 +74,6 @@ public class KingPiece extends Piece{
     private boolean isUnderAttack(Square[][] board, int toI, int toJ){
         for(int i = 0; i < BOARD_SIZE; i++){
             for(int j = 0; j < BOARD_SIZE; j++){
-                //TODO check piece color
-                //TODO check is not king
-
                 if(!board[i][j].isEmpty() && pieceColor != board[i][j].getPieceColor() && board[i][j].getPieceType() != PieceType.KING && board[i][j].isValidMove(board,toI,toJ)){
                     return true;
                 }

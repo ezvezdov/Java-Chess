@@ -18,7 +18,6 @@ public class FilesIO {
      *
      * @param fileName path of file to get
      * @return File if it's opened successfully
-     * @throws NullPointerException
      */
     private File getFileFromResource(String fileName) throws NullPointerException {
         try {
@@ -36,7 +35,6 @@ public class FilesIO {
      *
      * @param fileName path of file to get
      * @return File if it's opened successfully
-     * @throws NullPointerException
      */
     private File getFile(String fileName) throws NullPointerException{
         try {
@@ -57,6 +55,7 @@ public class FilesIO {
     void setPrintStream(String filePath){
         file = getFileFromResource(filePath);
         try {
+            assert this.file != null;
             printWriter = new PrintWriter(this.file);
         } catch (FileNotFoundException e) {
             System.out.println("Error while opening " + filePath + "file for write!");
@@ -75,6 +74,7 @@ public class FilesIO {
 
 
         try {
+            assert file != null;
             printWriter = new PrintWriter(file);
         } catch (FileNotFoundException e) {
             System.out.println("Error with opening " + filePath + "file for write!");
@@ -95,6 +95,7 @@ public class FilesIO {
     void setScanner(String filePath){
         File file = getFileFromResource(filePath);
         try {
+            assert file != null;
             scanner = new Scanner(file);
         } catch (FileNotFoundException e) {
             System.out.println("Error while setting input stream!");
@@ -105,6 +106,7 @@ public class FilesIO {
     private void createFile(String filePath){
         File file = getFile(filePath);
         try {
+            assert file != null;
             file.createNewFile();
         } catch (IOException e) {
             System.out.println("Error while creating file!");
