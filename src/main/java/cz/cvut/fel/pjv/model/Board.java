@@ -97,6 +97,9 @@ public class Board {
         model.setPlayers(player1,player2);
     }
 
+    public void setTimers(long timer1, long timer2){
+        model.setTimers(timer1,timer2);
+    }
     /**
      *
      */

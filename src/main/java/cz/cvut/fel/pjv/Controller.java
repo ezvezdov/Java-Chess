@@ -18,6 +18,7 @@ public class Controller {
         view.setModel(model);
         model.setView(view);
         GUIStart();
+
     }
 
     private void GUIStart(){
@@ -62,8 +63,13 @@ public class Controller {
     }
     public void saveGameAction(){model.saveGame();}
     public void continueGameAction(){
-        model.continueGame();
+        model.setPlayers("player1Name","player2Name");
+        model.startGame(GameType.MULTIPLAYER);
+
         view.setBoardScene();
+        view.initTimer();
+
+        model.continueGame();
         setPlayersNameView();
     }
     public void saveGamePGNAction() {

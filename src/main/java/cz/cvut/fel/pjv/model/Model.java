@@ -9,7 +9,6 @@ import javafx.scene.paint.Color;
 import cz.cvut.fel.pjv.view.View;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Model {
     protected final int BOARD_SIZE = 8;
@@ -18,13 +17,18 @@ public class Model {
     private PGNSaver pgnSaver = new PGNSaver();
 
     private Player currentPlayerMove;
-    private Player player1, player2;
+    private Player player1 = new Player("player1", Color.WHITE);
+    private Player player2 = new Player("player2", Color.BLACK);
+
     private boolean isSelectedPiece = false;
     private GameType gameType;
     private int selectedPieceI, selectedPieceJ;
 
     private boolean moveHasDone = false;
 
+    public Model(){
+        initTimers();
+    }
 
     public void setView(View view){
         this.view = view;
@@ -70,20 +74,48 @@ public class Model {
         return player2.getPlayerName();
     }
 
-    public void setPlayers(String player1Name){
-        player1 = new Player(player1Name,Color.WHITE);
+    public void initComputerPlayer(){
+        ChessTimer chessTimer = player2.getPlayerTimer();
         player2 = new ComputerPlayer(Color.BLACK);
+        player2.setPlayerTimer(chessTimer);
+
+    }
+
+    private void initTimers(){
+        player1.setPlayerTimer(new ChessTimer(view));
+        player2.setPlayerTimer(new ChessTimer(view));
+    }
+
+
+    public void setPlayers(String player1Name){
+        player1.setPlayerName(player1Name);
+        player1.setPlayerColor(Color.WHITE);
+
+        Player tmpPlayer = player2;
+        initComputerPlayer();
+//        player2 = new ComputerPlayer(tmpPlayer.getPlayerColor());
     }
 
     public void setPlayers(String player1Name, String player2Name){
-        player1 = new Player(player1Name,Color.WHITE);
-        player2 = new Player(player2Name,Color.BLACK);
+        player1.setPlayerName(player1Name); //Color.WHITE
+        player2.setPlayerName(player2Name); //Color.BLACK
     }
 
     public void setPlayers(Player player1, Player player2){
-        this.player1 = player1;
-        this.player2 = player2;
+        this.player1.setPlayerColor(player1.getPlayerColor());
+        this.player1.setPlayerName(player1.getPlayerName());
+        this.player2.setPlayerColor(player2.getPlayerColor());
+        this.player2.setPlayerName(player2.getPlayerName());
     }
+
+    public void setTimers(long timer1, long timer2){
+        stopTimers();
+        player1.setTimerValue(timer1);
+        player2.setTimerValue(timer2);
+        runCurrentPlayersTimer();
+    }
+
+
 
     public LongProperty getPlayer1Timestamp(){
         return player1.getTimestamp();
@@ -94,22 +126,19 @@ public class Model {
     }
 
 
-    public void initComputerPlayer(){
-        player2 = new ComputerPlayer(Color.BLACK);
-    }
 
-    private void initTimers(){
-        player1.setPlayerTimer(new ChessTimer(view));
-        player2.setPlayerTimer(new ChessTimer(view));
-        player1.initTimer();
-        player2.initTimer();
-        if(player1.getPlayerColor() == Color.WHITE){
+
+    private void runCurrentPlayersTimer(){
+        if(currentPlayerMove == player1){
             player1.startTimer();
         }
-        else{
+        else {
             player2.startTimer();
         }
     }
+
+
+
 
     private void stopTimers(){
         player1.stopTimer();
@@ -121,26 +150,19 @@ public class Model {
         this.gameType = gameType;
         moveHasDone = false;
         resetBoard();
-        initTimers();
+
+        setTimers(0,0);
+        runCurrentPlayersTimer();
         view.changeBoardView(getBoardAsArrayList());
 
     }
     public void continueGame(){
-        player1 = new Player("player1Name",Color.WHITE);
-        player2 = new Player("player2Name",Color.BLACK);
-
-        resetBoard();
         board.loadSavedGame();
         if(isSinglePlayer()){
             initComputerPlayer();
         }
 
         view.changeBoardView(getBoardAsArrayList());
-    }
-
-    private boolean randomiseColors(){
-        Random random = new Random();
-        return random.nextBoolean();
     }
 
     private void resetBoard(){

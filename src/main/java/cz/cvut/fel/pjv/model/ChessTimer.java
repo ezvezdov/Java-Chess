@@ -17,6 +17,7 @@ public class ChessTimer extends Thread{
     long curTime = 0;
 
     boolean isStopped = true;
+    boolean isWorking = false;
 
     View view;
     private LongProperty longProperty;
@@ -32,7 +33,7 @@ public class ChessTimer extends Thread{
 
     //start timer
     public void run(){
-        longProperty.set(0);
+        isWorking = true;
         while(true){
             if(!isStopped){
                 changeTimer();
@@ -68,5 +69,14 @@ public class ChessTimer extends Thread{
         return longProperty;
     }
 
+    public long getTimeAsLong(){
+        return timerTime;
+    }
+
+    public void setTimerValue(long timerValue){
+        longProperty.set(timerValue);
+        timerTime = timerValue;
+
+    }
 
 }

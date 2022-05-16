@@ -44,6 +44,8 @@ public class BoardPane extends GridPane {
     private Label player1Name = new Label(), player2Name = new Label();
 
     Label player1Timer = new Label("00:00"), player2Timer = new Label("00:00");
+    ChangeListener<Number> timer1Listener, timer2Listener;
+    boolean isTimersSet = false;
 
     private Color selectedSquareColor = Color.GOLD;
     private Color evenSquareColor = Color.BEIGE;
@@ -74,6 +76,7 @@ public class BoardPane extends GridPane {
         initPlayerNameLabels();
 
         initTimersLabels();
+        initTimersListeners();
     }
 
 
@@ -145,7 +148,6 @@ public class BoardPane extends GridPane {
     }
 
     public void initTimersLabels(){
-        player1Timer = new Label("00:00");
         player1Timer.setMaxWidth(4 * SQUARE_SIZE_PX);
         player1Timer.setMaxHeight(SQUARE_SIZE_PX);
         player1Timer.setAlignment(Pos.CENTER);
@@ -154,56 +156,55 @@ public class BoardPane extends GridPane {
         this.add(player1Timer,11,5,14,5);
         GridPane.setHalignment(player1Timer, HPos.CENTER);
 
-        player2Timer = new Label("00:00");
         player2Timer.setFont(player1Timer.getFont());
         this.add(player2Timer,11,3,14,3);
         GridPane.setHalignment(player2Timer, HPos.CENTER);
 
     }
 
-
-    public void setTimers(){
-        player1Timer.setText("00:00");
-        player2Timer.setText("00:00");
-
-        final AtomicLong count1 = new AtomicLong(-1);
-        model.getPlayer1Timestamp().addListener(new ChangeListener<Number>() {
+    public void initTimersListeners(){
+        timer1Listener = new ChangeListener<Number>() {
             @Override
             public void changed(final ObservableValue<? extends Number> observable,
                                 final Number oldValue, final Number newValue) {
-                if (count1.getAndSet(newValue.intValue()) == -1) {
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
-                            long value = count1.getAndSet(-1);
+                            long value = (long) newValue;
                             Date dateTime = new Date(value);
                             String timeString = String.format("%02d",dateTime.getMinutes()) + ":" + String.format("%02d",dateTime.getSeconds());
                             player1Timer.setText(timeString);
                         }
                     });
                 }
-            }
-        });
+        };
 
-        final AtomicLong count2 = new AtomicLong(-1);
-        model.getPlayer2Timestamp().addListener(new ChangeListener<Number>() {
+
+        timer2Listener = new ChangeListener<Number>() {
             @Override
             public void changed(final ObservableValue<? extends Number> observable,
                                 final Number oldValue, final Number newValue) {
-                if (count2.getAndSet(newValue.intValue()) == -1) {
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
-                            long value = count2.getAndSet(-1);
+                            long value = (long) newValue;
                             Date dateTime = new Date(value);
                             String timeString = String.format("%02d",dateTime.getMinutes()) + ":" + String.format("%02d",dateTime.getSeconds());
                             player2Timer.setText(timeString);
                         }
                     });
                 }
-            }
-        });
+        };
 
+    }
+
+
+    public void setTimers(){
+        if(!isTimersSet){
+            model.getPlayer1Timestamp().addListener(timer1Listener);
+            model.getPlayer2Timestamp().addListener(timer2Listener);
+            isTimersSet = true;
+        }
 
     }
 

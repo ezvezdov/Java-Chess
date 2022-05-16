@@ -49,6 +49,21 @@ public class ChessMenuBar extends MenuBar {
             }
         });
 
+        MenuItem saveAndGoToMenu = new MenuItem("Save and go to menu");
+        saveAndGoToMenu.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                view.saveGameAction();
+                view.setMenuScene();
+            }
+        });
+        MenuItem goToMenuWithoutSaving = new MenuItem("Go to menu without saving");
+        goToMenuWithoutSaving.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                view.setMenuScene();
+            }
+        });
+
+
         MenuItem exitWithoutSaving = new MenuItem("Exit without saving");
         exitWithoutSaving.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
@@ -66,9 +81,9 @@ public class ChessMenuBar extends MenuBar {
 
 
 
-        gameMenu.getItems().addAll(continueGameMenuItem,newSingleplayerGame,saveGameMenuItem,saveGameAsPGN);
+        gameMenu.getItems().addAll(continueGameMenuItem,newSingleplayerGame,newMultiplayerGame,saveGameMenuItem,saveGameAsPGN);
 
-        exitMenu.getItems().addAll(saveAndExit,exitWithoutSaving);
+        exitMenu.getItems().addAll(saveAndGoToMenu,goToMenuWithoutSaving,saveAndExit,exitWithoutSaving);
 
         this.getMenus().addAll(gameMenu,exitMenu);
 

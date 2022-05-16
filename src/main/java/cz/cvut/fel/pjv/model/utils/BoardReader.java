@@ -37,6 +37,7 @@ public class BoardReader extends FilesIO{
         setScanner(filePath);
 
         ArrayList<String> playersData = new ArrayList<String>();
+        ArrayList<String> timersData = new ArrayList<String>();
 
         while (scanner.hasNext()){
             String line = scanner.nextLine();
@@ -62,6 +63,9 @@ public class BoardReader extends FilesIO{
                 else if(curPieceData.length() >= 4 && curPieceData.charAt(0) == '%' ){
                     playersData.add(curPieceData);
                 }
+                else if(curPieceData.length() >= 4 && curPieceData.charAt(0) == '&' ){
+                    timersData.add(curPieceData);
+                }
                 else if(curPieceData.length() == 4){
                     setPiece(curPieceData);
                 }
@@ -69,6 +73,9 @@ public class BoardReader extends FilesIO{
         }
         if(playersData.size() >= 2){
             setPlayers(playersData.get(0),playersData.get(1));
+        }
+        if(timersData.size() >= 2){
+            setTimers(timersData.get(0), timersData.get(1));
         }
 
         scanner.close();
@@ -178,6 +185,12 @@ public class BoardReader extends FilesIO{
 
         board.setPlayer(getPlayerFromData(player1SData),getPlayerFromData(player2Data));
 
+    }
+
+    private void setTimers(String RowTimer1Data, String RowTimer2Data){
+        long timer1Data = Long.parseLong(RowTimer1Data.substring(3));
+        long timer2Data = Long.parseLong(RowTimer2Data.substring(3));
+        board.setTimers(timer1Data,timer2Data);
     }
 
 }

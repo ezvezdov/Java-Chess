@@ -52,6 +52,7 @@ public class View extends Application {
     private void GUIinit(){
         initMenuScene();
         initBoardScene();
+//        initTimer();
     }
 
     private void initMenuScene(){
@@ -107,10 +108,6 @@ public class View extends Application {
         boardPane.paintSelected(boardI,boardJ);
     }
 
-//    public void setTimer(int mins, int secs){
-//        boardPane.setTimer(mins,secs);
-//
-//    }
 
     public void initTimer(){
         boardPane.setTimers();
