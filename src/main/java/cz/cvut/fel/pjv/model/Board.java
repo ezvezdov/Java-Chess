@@ -28,6 +28,9 @@ public class Board {
         loadBoard();
     }
 
+    public Square[][] getBoard() {
+        return board;
+    }
 
     /**
      * BoardReader initialization and set START_BOARD_FILE to initialize pieces positions on the board
@@ -52,12 +55,35 @@ public class Board {
         list.add(boardJ);
         return list;
     }
+
+    /**
+     * Return true if King piece placed on this square.
+     */
     public boolean isKing(int boardI, int boardJ){
         return board[boardI][boardJ].isKing();
     }
 
+    /**
+     * Return true if square is empty.
+     *
+     * @param boardI I coordinate of square
+     * @param  boardJ J coorinate of square
+     * @return true if empty, else false.
+     */
     public boolean isEmptySquare(int boardI, int boardJ){
         return board[boardI][boardJ].isEmpty();
+    }
+
+    /**
+     * Return true if in square is opponent's piece (another color piece)
+     *
+     * @param boardI I coordinate of square
+     * @param  boardJ J coorinate of square
+     * @param currentPlayerColor another piece color
+     * @return true if piece on this square is another player piece
+     */
+    public boolean isOpponentPiece(int boardI, int boardJ, Color currentPlayerColor){
+        return board[boardI][boardJ].isOpponent(currentPlayerColor);
     }
 
     /**
@@ -74,34 +100,59 @@ public class Board {
         }
         return boardArrayList;
     }
-    public boolean isOpponentPiece(int boardI, int boardJ, Color currentPlayerColor){
-        return board[boardI][boardJ].isOpponent(currentPlayerColor);
-    }
 
-    public Square[][] getBoard() {
-        return board;
-    }
 
+    /**
+     * Set new square
+     *
+     * @param pieceColor piece's color
+     * @param pieceType piece to set on square
+     * @param boardI I coordinate of square
+     * @param boardJ J coordinate of square
+     */
     public void setSquare(Color pieceColor, PieceType pieceType, int boardI, int boardJ){
         board[boardI][boardJ] = new Square(pieceColor,pieceType,boardI,boardJ);
     }
+
+    /**
+     *
+     * Set player, who should make next move using color of his pieces.
+     *
+     * @param color color of piece, that player play
+     */
     public void setCurrentPlayerColor(Color color){
         model.setCurrentPlayerColor(color);
     }
 
+    /**
+     * Set game type to model.
+     * @param gameType type of game
+     */
     public void setGameType(GameType gameType){
         model.setGameType(gameType);
     }
 
+    /**
+     * Set players data.
+     *
+     * @param player1 player1 Player instance
+     * @param player2 player2 Player instance
+     */
     public void setPlayer(Player player1, Player player2){
         model.setPlayers(player1,player2);
     }
 
+    /**
+     * Set new values on timer.
+     *
+     * @param timer1 timer1 value
+     * @param timer2 timer2 value
+     */
     public void setTimers(long timer1, long timer2){
         model.setTimers(timer1,timer2);
     }
     /**
-     *
+     * Load board date from file.
      */
     private void loadBoard(){
         br.setData();
@@ -173,6 +224,16 @@ public class Board {
         return roqueMove;
     }
 
+    /**
+     *
+     * Check if current move was promotion.
+     *
+     * @param fromI piece I start coordinate
+     * @param fromJ piece J start coordinate
+     * @param toI piece I destination coordinate
+     * @param toJ piece J destination coordinate
+     * @return true if move was promotion.
+     */
     private boolean isPromotion(int fromI, int fromJ, int toI, int toJ){
         if(!board[fromI][fromJ].isPawn()){
             return false;
@@ -181,24 +242,71 @@ public class Board {
 
     }
 
+    /**
+     * Make promotion, change pawn to queen.
+     *
+     * @param fromI piece I start coordinate
+     * @param fromJ piece J start coordinate
+     * @param toI piece I destination coordinate
+     * @param toJ piece J destination coordinate
+     */
     private void makePromotion(int fromI, int fromJ, int toI, int toJ){
         System.out.println("PROMOTION");
         board[fromI][fromJ].setQuinInsteadOfPawn();
     }
 
+    /**
+     * Check if pawn moved two squares forward.
+     *
+     * @param fromI piece I start coordinate
+     * @param fromJ piece J start coordinate
+     * @param toI piece I destination coordinate
+     * @param toJ piece J destination coordinate
+     * @return true if pawn moved two squares forward.
+     */
     private boolean isTwoSquareMove(int fromI, int fromJ, int toI, int toJ){
         return board[fromI][fromJ].isPawn() && Math.abs(fromJ - toJ) == 2;
     }
+
+    /**
+     * Set TwoSquareMove (pawn moved two squares forward)
+     *
+     * @param fromI piece I start coordinate
+     * @param fromJ piece J start coordinate
+     * @param toI piece I destination coordinate
+     * @param toJ piece J destination coordinate
+     */
     private void setTwoSquareMove(int fromI, int fromJ, int toI, int toJ){
         board[fromI][fromJ].setTwoSquareMove();
     }
 
+    /**
+     *
+     * Check is current move en Passant.
+     *
+     * @param fromI piece I start coordinate
+     * @param fromJ piece J start coordinate
+     * @param toI piece I destination coordinate
+     * @param toJ piece J destination coordinate
+     * @return true is current move is en Passant.
+     */
     private boolean isEnPassant(int fromI, int fromJ, int toI, int toJ){
         if(!board[fromI][fromJ].isPawn()){
             return false;
         }
         return Math.abs(fromI - toI) == 1 && Math.abs(fromJ - toJ) == 1 && board[toI][toJ].isEmpty();
     }
+
+    /**
+     * Make en Passant move (capture opponent's pawn)
+     *
+     * @param fromI piece I start coordinate
+     * @param fromJ piece J start coordinate
+     * @param toI piece I destination coordinate
+     * @param toJ piece J destination coordinate
+     * @return ArrayList with changes in format
+     *         { { Color pieceColor, PieceType pieceType, boardI, boardJ } ...}
+     */
     private ArrayList makeEnPassant(int fromI, int fromJ, int toI, int toJ){
         ArrayList enPassantMove;
         if(fromI < toI){
@@ -212,6 +320,16 @@ public class Board {
         return enPassantMove;
     }
 
+    /**
+     * Make move (check roque, check en Passant, check promotion)
+     *
+     * @param fromI piece I start coordinate
+     * @param fromJ piece J start coordinate
+     * @param toI piece I destination coordinate
+     * @param toJ piece J destination coordinate
+     * @return ArrayList with changes in format
+     *         { { Color pieceColor, PieceType pieceType, boardI, boardJ } ...}
+     */
     public ArrayList makeMove(int fromI, int fromJ, int toI, int toJ){
         /**
          * Makes move if it's available (changes)
@@ -219,20 +337,21 @@ public class Board {
 
         ArrayList globalList = new ArrayList();
 
+        // Check roque
         if(isRoque(fromI,fromJ,toI,toJ)){
             globalList = makeRoqueMove(fromI,fromJ,toI,toJ);
         }
+        // Check promotion
         if(isPromotion(fromI,fromJ,toI,toJ)){
             makePromotion(fromI,fromJ,toI,toJ);
         }
         if(isTwoSquareMove(fromI,fromJ,toI,toJ)){
             setTwoSquareMove(fromI,fromJ,toI,toJ);
         }
+        // Check en Passant
         if(isEnPassant(fromI,fromJ,toI,toJ)){
             globalList.add(makeEnPassant(fromI,fromJ,toI,toJ));
         }
-
-
 
         board[toI][toJ].setPieceFromSquare(board[fromI][fromJ]);
         board[fromI][fromJ].setEmpty();
@@ -242,14 +361,13 @@ public class Board {
         globalList.add(getSquareStatus(toI,toJ));
         globalList.add(getSquareStatus(fromI,fromJ));
 
-
-
         return globalList;
     }
 
 
-
-
+    /**
+     * DEBUG PRINT BOARD
+     */
     public void printBoard() {
         for(int i = 0; i < BOARD_SIZE; i++){
             for(int j = 0; j < BOARD_SIZE; j++){

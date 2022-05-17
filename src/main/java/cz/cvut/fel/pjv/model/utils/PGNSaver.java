@@ -89,6 +89,12 @@ public class PGNSaver extends FilesIO{
     }
 
 
+    /**
+     * Print tag(event, site, date and player data)
+     *
+     * @param player1 player1, Player instance
+     * @param player2 player2, Player instance
+     */
     private void printTags(Player player1, Player player2){
         printWriter.println("[Event \"Javafx Chess Game\"]");
         printWriter.println("[Site \"Prague, Czech Republic\"]");
@@ -98,6 +104,11 @@ public class PGNSaver extends FilesIO{
 
     }
 
+    /**
+     *
+     * Print all saved moves.
+     *
+     */
     private void printMovesData(){
         int counter = 1;
         int lineSize = 0;
@@ -122,11 +133,22 @@ public class PGNSaver extends FilesIO{
         }
     }
 
+    /**
+     * Generate PGN file name with current date and time.
+     *
+     * @return new PGN filename
+     */
     private String generatePGNFileName(){
         String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HHmmss").format(Calendar.getInstance().getTime());
         return System.getProperty("user.dir") + PGN_DIRECTORY_PATH + timeStamp + ".pgn";
     }
 
+    /**
+     * Save all data to file .pgn
+     *
+     * @param player1 player1, Player instance
+     * @param player2 player2, Player instance
+     */
     public void savePGN(Player player1, Player player2){
         //Generate file and directory
         String fileName = generatePGNFileName();

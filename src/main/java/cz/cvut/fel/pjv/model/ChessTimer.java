@@ -28,8 +28,9 @@ public class ChessTimer extends Thread{
     }
 
 
-
-    //start timer
+    /**
+     * Thread run method.
+     */
     public void run(){
         isWorking = true;
         while(true){
@@ -39,6 +40,9 @@ public class ChessTimer extends Thread{
         }
     }
 
+    /**
+     * change timer value.
+     */
     private void changeTimer(){
         lastTimeStamp = new Date(System.currentTimeMillis());
         while (!isStopped){
@@ -53,24 +57,41 @@ public class ChessTimer extends Thread{
         }
     }
 
-    public void stopClock(){
+    /**
+     * Temporary stop timer.
+     */
+    public void stopTimer(){
         timerTime = curTime;
         isStopped = true;
     }
 
+    /**
+     * Continue run timer.
+     */
     public void startTimer(){
         isStopped = false;
         lastTimeStamp = new Date(System.currentTimeMillis());
     }
-    
+
+    /**
+     * Get time stamp for view listeners.
+     */
     public LongProperty getTimestamp() {
         return longProperty;
     }
 
+    /**
+     * Get time as a long type (for saving timer value to file)
+     * @return
+     */
     public long getTimeAsLong(){
         return timerTime;
     }
 
+    /**
+     * Set timer value using long time type.
+     * @param timerValue timer value in long
+     */
     public void setTimerValue(long timerValue){
         longProperty.set(timerValue);
         timerTime = timerValue;

@@ -103,6 +103,12 @@ public class FilesIO {
         }
     }
 
+
+    /**
+     *
+     * Create new file.
+     * @param filePath path of file to create
+     */
     private void createFile(String filePath){
         File file = getFile(filePath);
         try {
@@ -114,6 +120,12 @@ public class FilesIO {
         }
     }
 
+
+    /**
+     * Create directory
+     *
+     * @param directoryPath path to directory to create.
+     */
     void createDirectory(String directoryPath){
         new File(directoryPath).mkdirs();
 

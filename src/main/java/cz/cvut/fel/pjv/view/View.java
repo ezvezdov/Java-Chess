@@ -33,27 +33,45 @@ public class View extends Application {
     private static BoardPane boardPane = null;
 
 
+    /**
+     * Set controller to have access for Actions.
+     */
     public void setController(Controller ctrl){
         View.ctrl = ctrl;
     }
+
+    /**
+     * Set model to read data from it.
+     */
     public void setModel(Model model){
         View.model = model;
     }
 
+
+    /**
+     * Start GUI, set menu.
+     */
     @Override
     public void start(Stage stage) {
         View.stage = stage;
         GUIinit();
         setMenuScene();
         stage.setTitle("JavaFX Chess");
-//        stage.setResizable(false);
+        stage.setResizable(false);
         stage.show();
     }
+
+    /**
+     *  Initialise menu scene and board scene.
+     */
     private void GUIinit(){
         initMenuScene();
         initBoardScene();
     }
 
+    /**
+     * Initialise menu scene.
+     */
     private void initMenuScene(){
         FXMLLoader fxmlLoader = new FXMLLoader(View.class.getResource("/scenesFXML/MenuScene.fxml"));
         try {
@@ -63,25 +81,52 @@ public class View extends Application {
         }
     }
 
+    /**
+     * Initialise board scene.
+     */
     private void initBoardScene(){
         boardPane = new BoardPane(this,ctrl,model,BOARD_SIZE,SQUARE_SIZE_PX);
         boardScene = new Scene(boardPane,windowSizeX,windowSizeY);
     }
+
+    /**
+     * Show menu GUI.
+     */
     public void setMenuScene(){
         stage.setScene(menuScene);
     }
+
+    /**
+     * Show board GUI.
+     */
     public void setBoardScene(){
         stage.setScene(boardScene);
     }
 
 
+    /**
+     * Update board view.
+     * @param list Arraylist which represents board all just changes in board
+     *             in format{ { Color pieceColor, PieceType pieceType, boardI, boardJ } ...}
+     */
     public void changeBoardView(ArrayList list){
         boardPane.changeBoardViewByList(list);
     }
+
+    /**
+     * Paint selected piece.
+     * @param boardI I coordinate of selected square.
+     * @param boardJ J coordinate of selected square.
+     */
     public void selectPiece(int boardI, int boardJ){
         boardPane.paintSelected(boardI,boardJ);
     }
 
+    /**
+     * Set dialog to ask player name.
+     *
+     * @return player name
+     */
     public String getPlayerName(){
         TextInputDialog dialog = new TextInputDialog("Name");
         dialog.setTitle("Player's name");
@@ -96,10 +141,19 @@ public class View extends Application {
         return  result.get();
     }
 
+    /**
+     * Set players names to board GUI.
+     * @param name1 name of player1
+     * @param name2 name of player2
+     */
     public void setPlayersNames(String name1, String name2){
         boardPane.setPlayersNames(name1,name2);
     }
 
+    /**
+     * Show Game over GUI.
+     * @param winnerName name of winner player.
+     */
     public void gameOver(String winnerName){
         Dialog<Object> dialog = new Dialog<>();
         dialog.initStyle(StageStyle.UTILITY);

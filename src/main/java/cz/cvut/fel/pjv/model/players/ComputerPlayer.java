@@ -15,6 +15,7 @@ public class ComputerPlayer extends Player {
     }
 
     /**
+     * Make random move. (For singleplayer)
      *
      * @param BOARD_SIZE size of board
      * @param board

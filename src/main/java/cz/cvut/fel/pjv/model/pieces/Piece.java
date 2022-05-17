@@ -35,10 +35,13 @@ public abstract class Piece {
         isTwoSquareMove = true;
     }
 
-    public boolean getLeftSide(){
-        return isLeftSide;
-    }
-
+    /**
+     * Make a pair of coordinates
+     * @param boardI I piece coordinate
+     * @param boardJ J piece coordinate
+     * @return  coordinates pair in format
+     *          {boardI, boardJ}
+     */
     ArrayList<Integer> makePair(int boardI, int boardJ){
         ArrayList<Integer> list = new ArrayList<Integer>();
         list.add(boardI);
@@ -46,6 +49,17 @@ public abstract class Piece {
         return list;
     }
 
+    /**
+     * Check if move possible
+     *
+     * @param board board representation as Square[][]
+     * @param fromI I piece start coordinate
+     * @param fromJ J piece start coordinate
+     * @param toI I piece destination coordinate
+     * @param toJ J piece destination coordinate
+     *
+     * @return true if move possible
+     */
     public boolean isValidMove(Square[][] board, int fromI, int fromJ, int toI, int toJ){
         ArrayList availableMovesList = makeAvailableMovesList(board,fromI,fromJ);
         System.out.println(availableMovesList);
@@ -59,7 +73,15 @@ public abstract class Piece {
         return false;
     }
 
-
+    /**
+     * Make arraylist of possible moves.
+     *
+     * @param board board representation as Square[][]
+     * @param fromI I piece start coordinate
+     * @param fromJ J piece start coordinate
+     * @return Available moves ArrayList in format
+     *          { {fromI, fromJ, toI, toJ} ...}
+     */
     public abstract ArrayList makeAvailableMovesList(Square[][] board, int fromI, int fromJ);
 
 }

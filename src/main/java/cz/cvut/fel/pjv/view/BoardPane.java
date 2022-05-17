@@ -29,7 +29,6 @@ import java.util.Date;
 import java.util.Objects;
 
 public class BoardPane extends GridPane {
-    private final View view;
     private final Model model;
     private final Controller ctrl;
     private final int BOARD_SIZE;
@@ -42,15 +41,14 @@ public class BoardPane extends GridPane {
 
     Label player1Timer = new Label("00:00"), player2Timer = new Label("00:00");
     ChangeListener<Number> timer1Listener, timer2Listener;
-    boolean isTimersSet = false;
 
     private final Color selectedSquareColor = Color.GOLD;
     private final Color evenSquareColor = Color.BEIGE;
     private final Color oddSquareColor = Color.SADDLEBROWN;
     private final Color transparentColor = Color.TRANSPARENT;
+    private final Color backgroundColor = Color.LIGHTGOLDENRODYELLOW;
 
     BoardPane(View view, Controller ctrl, Model model, int BOARD_SIZE, int SQUARE_SIZE_PX) {
-        this.view = view;
         this.ctrl = ctrl;
         this.model = model;
 
@@ -60,7 +58,7 @@ public class BoardPane extends GridPane {
 
         this.piecesArray = new Rectangle[BOARD_SIZE][BOARD_SIZE];
         this.boardSquaresArray = new Rectangle[BOARD_SIZE][BOARD_SIZE];
-        this.setBackground(new Background(new BackgroundFill(Color.RED,new CornerRadii(0), new Insets(0))));
+        this.setBackground(Background.fill(backgroundColor));
 
         loadImages();
 
@@ -77,7 +75,9 @@ public class BoardPane extends GridPane {
     }
 
 
-
+    /**
+     * load images of pieces from resources folder and stare to array.
+     */
     private void loadImages(){
         images = new Image[2][6];
 
@@ -102,12 +102,17 @@ public class BoardPane extends GridPane {
         }
     }
 
+    /**
+     * Set menu bar to board GUI
+     */
     private void setChessMenuBar(){
         ChessMenuBar chessMenuBar = new ChessMenuBar(ctrl);
         this.add(chessMenuBar,0,0,20,1);
     }
 
-
+    /**
+     * Initialise labels with players names
+     */
     private void initPlayerNameLabels(){
         player1Name.setAlignment(Pos.CENTER);
         player1Name.setFont(Font.font(null, FontWeight.BOLD, 25));
@@ -124,12 +129,22 @@ public class BoardPane extends GridPane {
         GridPane.setHalignment(player2Name, HPos.CENTER);
 
     }
-    void setPlayersNames(String name1, String name2){
+
+    /**
+     * Set player's names on board GUI labels.
+     *
+     * @param name1 name of palyer1
+     * @param name2 name of player2
+     */
+     void setPlayersNames(String name1, String name2){
         player1Name.setText(name1);
         player2Name.setText(name2);
 
     }
 
+    /**
+     * Timer button, what change move and stop/start timer.
+     */
     private void setTimerButton(){
         Button timerButton = new Button("Finish move!");
         timerButton.setMaxHeight(SQUARE_SIZE_PX);
@@ -138,7 +153,10 @@ public class BoardPane extends GridPane {
         this.add(timerButton,11,4,14,4);
     }
 
-    public void initTimersLabels(){
+    /**
+     * Initialise labels for timers value.
+     */
+    private void initTimersLabels(){
         player1Timer.setMaxWidth(4 * SQUARE_SIZE_PX);
         player1Timer.setMaxHeight(SQUARE_SIZE_PX);
         player1Timer.setAlignment(Pos.CENTER);
@@ -153,7 +171,10 @@ public class BoardPane extends GridPane {
 
     }
 
-    public void initTimersListeners(){
+    /**
+     * Initialisation of Timer Listeners, what get actual timer value from model.
+     */
+    private void initTimersListeners(){
         timer1Listener = (observable, oldValue, newValue) -> Platform.runLater(() -> {
             long value = (long) newValue;
             Date dateTime = new Date(value);
@@ -173,10 +194,13 @@ public class BoardPane extends GridPane {
         model.getPlayer2Timestamp().addListener(timer2Listener);
     }
 
-
+    /**
+     * Generate all background and board squares. Make board squares clickable.
+     */
     private void generateSquares() {
         for (int i = 0; i <= BOARD_SIZE+1; i++) {
             for (int j = 0; j <= BOARD_SIZE+1; j++) {
+                //generate board frame with coordinates
                 if(i == 0 || j == 0 || i == BOARD_SIZE+1 || j == BOARD_SIZE+1){
                     char coordinateOnBoard = 0;
                     if(j == 0 && i != 0 && i != BOARD_SIZE+1 || j == BOARD_SIZE+1 && i != 0 && i != BOARD_SIZE+1){
@@ -196,6 +220,8 @@ public class BoardPane extends GridPane {
                     GridPane.setHalignment(text, HPos.CENTER);
                     continue;
                 }
+
+                //generate board clickable squares
                 int shiftedI = i-1;
                 int shiftedJ = j-1;
 
@@ -218,7 +244,6 @@ public class BoardPane extends GridPane {
                     System.out.println("boardI: " + boardI + " " + "boardJ: " + boardJ);
 
                     ctrl.boardSquareWasClicked(boardI,boardJ);
-//                        view.boardSquareWasClicked(boardI,boardJ);
                 });
                 if ((i+j) % 2 == 0) {
                     backgroundRectangle.setFill(evenSquareColor);
@@ -232,16 +257,23 @@ public class BoardPane extends GridPane {
 
             }
         }
+
+        //generate background squares (right side of baord GUI)
         for(int i = BOARD_SIZE+2; i <  BOARD_SIZE+2+6; i++){
             for (int j = 0; j <= BOARD_SIZE+1; j++) {
                 Rectangle backgroundRectangle = new Rectangle(SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX, SQUARE_SIZE_PX);
-                backgroundRectangle.setFill(Color.LIGHTGOLDENRODYELLOW);
-//                backgroundRectangle.setStroke(Color.BLACK);
+                backgroundRectangle.setFill(backgroundColor);
                 this.add(backgroundRectangle, i, j+1);
             }
         }
     }
 
+    /**
+     * Paint selected square to another color in board GUI.
+     *
+     * @param boardI I coordinate of square in Board system
+     * @param boardJ J coordinate of square in Board system
+     */
     void paintSelected(int boardI, int boardJ){
         ArrayList viewCoordinates = transformBoard2View(boardI,boardJ);
         int viewI = (int) viewCoordinates.get(0);
@@ -256,6 +288,14 @@ public class BoardPane extends GridPane {
         }
     }
 
+    /**
+     *
+     * Transform coordinates from Board system to View system
+     *
+     * @param boardI I coordinate in Board system
+     * @param boardJ J coordinate in Board system
+     * @return coordinates in View system
+     */
     private ArrayList transformBoard2View(int boardI, int boardJ){
         ArrayList coordinates = new ArrayList();
         coordinates.add(boardI);
@@ -263,6 +303,14 @@ public class BoardPane extends GridPane {
         return coordinates;
     }
 
+    /**
+     *
+     * Transform coordinates from View system to Board system
+     *
+     * @param viewI I coordinate in View system
+     * @param viewJ J coordinate in View system
+     * @return coordinates in Board system
+     */
     private ArrayList transformView2Board(int viewI, int viewJ){
         ArrayList coordinates = new ArrayList();
         coordinates.add(viewI);
@@ -270,8 +318,13 @@ public class BoardPane extends GridPane {
         return coordinates;
     }
 
+    /**
+     *  Change board view using board representation as ArrayList of ArrayLists (pieces data)
+     *  in format { {Color pieceColor, PieceType pieceType, int boardI, int boardJ} ... }
+     * @param changesList board representation as ArrayList of ArrayLists
+     */
     void changeBoardViewByList(ArrayList changesList){
-        //{ {Color, PieceType, boardI, boardJ} ... }
+
         for (Object o : changesList) {
             ArrayList squareToChange = (ArrayList) o;
             ArrayList coordinates = transformBoard2View((int) squareToChange.get(2), (int) squareToChange.get(3));
@@ -279,6 +332,13 @@ public class BoardPane extends GridPane {
         }
     }
 
+    /**
+     * Set image of piece to square.
+     * @param pieceColor color of piece
+     * @param pieceType type of piece
+     * @param viewI I coordinate in View system
+     * @param viewJ J coordinate in View system
+     */
     private void setImage(Color pieceColor, PieceType pieceType, int viewI, int viewJ){
         System.out.println(viewI + " " + viewJ + " " +  pieceColor + " " + pieceType);
 

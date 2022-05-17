@@ -147,12 +147,12 @@ public class BoardReader extends FilesIO{
     }
 
     /**
-     * Set isSinglePlayer variable
+     * Set Game type if
      *
-     * @param isSinglePlayer is game singleplayer
+     * @param gameType game type char 'm' or 's'
      */
-    private void setGameType(char isSinglePlayer){
-        if(isSinglePlayer == 's'){
+    private void setGameType(char gameType){
+        if(gameType == 's'){
             board.setGameType(GameType.SINGLEPLAYER);
         }
         else{
@@ -160,6 +160,13 @@ public class BoardReader extends FilesIO{
         }
     }
 
+    /**
+     *
+     * Player's data decoder.
+     *
+     * @param playerData player data
+     * @return player instance with setted player data
+     */
     private Player getPlayerFromData(String playerData){
         Color playerColor;
         String playerName = playerData.substring(3);
@@ -174,12 +181,25 @@ public class BoardReader extends FilesIO{
         }
         return new Player(playerName,playerColor);
     }
+
+    /**
+     * Set saved players infromation
+     *
+     * @param player1SData player1 data
+     * @param player2Data player2 data
+     */
     private void setPlayers(String player1SData, String player2Data){
 
         board.setPlayer(getPlayerFromData(player1SData),getPlayerFromData(player2Data));
 
     }
 
+    /**
+     * Set saved timers value to timers
+     *
+     * @param RowTimer1Data timer1 value
+     * @param RowTimer2Data timer2 value
+     */
     private void setTimers(String RowTimer1Data, String RowTimer2Data){
         long timer1Data = Long.parseLong(RowTimer1Data.substring(3));
         long timer2Data = Long.parseLong(RowTimer2Data.substring(3));
