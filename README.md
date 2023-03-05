@@ -42,4 +42,4 @@ model.piece package
 - QueenPiece - representation of Queen piece
 - RookPiece - representatnion of Rook piece
 
-Project [UML diagram](uploads/1c551029dc599cc93fee1c78244c2faf/Chess__1_.pdf)
+Project [UML diagram](docs/UML.pdf)
